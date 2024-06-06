@@ -695,7 +695,7 @@ CharacterController:
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Center: {x: 0, y: 1.25, z: 0}
 --- !u!114 &7232532411508653236
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -773,7 +773,7 @@ MonoBehaviour:
   interpolateRotation: 1
   interpolateScale: 1
   coordinateSpace: 0
-  sendIntervalMultiplier: 20
+  sendIntervalMultiplier: 1
   timelineOffset: 0
   showGizmos: 0
   showOverlay: 0
@@ -801,11 +801,9 @@ MonoBehaviour:
   NavAgent_Player: {fileID: 2521000919055319789}
   Animator_Player: {fileID: 2521000919055319788}
   Transform_Player: {fileID: 2521000919046237456}
-  _rotationSpeed: 100
   cameraObject: {fileID: 1597024709342463972}
   cameraPos: {fileID: 3438171763756468519}
   PlayerCamera: {fileID: 7085587103270234724}
-  canSprint: 0
   _attKey: 323
 --- !u!114 &2406191464436401661
 MonoBehaviour:
@@ -2323,7 +2321,7 @@ Transform:
   m_GameObject: {fileID: 6826091800825358125}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2005213636418244896}
