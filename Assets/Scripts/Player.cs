@@ -16,7 +16,6 @@ public class Player : NetworkBehaviour
     [SerializeField] private GameObject cameraPos;
     [SerializeField] private CinemachineVirtualCamera PlayerCamera;
 
-    private Animator animator;
     private CharacterController cc;
 
     [SyncVar] private Vector2 moveVector = Vector2.zero;
@@ -31,8 +30,7 @@ public class Player : NetworkBehaviour
 
     private void Start()
     {
-        animator = GetComponent<Animator>();
-        //cc = GetComponent<CharacterController>();
+        cc = GetComponent<CharacterController>();
 
         if (!isLocalPlayer)
         {
@@ -50,11 +48,10 @@ public class Player : NetworkBehaviour
         {
             return;
         }
-        Debug.Log(this.transform.position);
 
         HandleMovement();
         HandleRotation();
-        HandleAttack();
+        CommandMove();
     }
 
     private void LateUpdate()
@@ -65,37 +62,44 @@ public class Player : NetworkBehaviour
         }
     }
 
+    [Command]
+    private void CommandMove()
+    {
+        HandleMovement();
+    }
+
+
+    [ClientRpc]
     private void HandleMovement()
     {
         // 로컬플레이어의 회전
-        float horizontal = Input.GetAxis("Horizontal");
-        transform.Rotate(0, horizontal * 100f * Time.deltaTime, 0);
+        //float horizontal = Input.GetAxis("Horizontal");
+        //transform.Rotate(0, horizontal * 100f * Time.deltaTime, 0);
 
-        // 로컬 플레이어의 이동
-        float vertical = Input.GetAxis("Vertical");
-        Vector3 forward = transform.TransformDirection(Vector3.forward);
+        //// 로컬 플레이어의 이동
+        //float vertical = Input.GetAxis("Vertical");
+        //Vector3 forward = transform.TransformDirection(Vector3.forward);
 
-        NavAgent_Player.velocity = forward * Mathf.Max(vertical, 0) * NavAgent_Player.speed;
+        //NavAgent_Player.velocity = forward * Mathf.Max(vertical, 0) * NavAgent_Player.speed;
 
-        //animator.SetFloat("XSpeed", moveVector.x);
-        ////animator.SetFloat("ZSpeed", moveVector.y);
+        Animator_Player.SetFloat("XSpeed", moveVector.x);
+        //animator.SetFloat("ZSpeed", moveVector.y);
 
-        //moveVector = Vector2.Lerp(moveVector, moveVectorTarget * moveSpeed, Time.deltaTime * 5);
+        moveVector = Vector2.Lerp(moveVector, moveVectorTarget * moveSpeed, Time.deltaTime * 5);
 
-        //Vector3 moveVector3 = new Vector3(moveVector.x * 0.5f, Physics.gravity.y, moveVector.y);
+        Vector3 moveVector3 = new Vector3(moveVector.x * 0.5f, Physics.gravity.y, moveVector.y);
 
-        //cc.Move(this.transform.rotation * moveVector3 * Time.deltaTime);
+        cc.Move(this.transform.rotation * moveVector3 * Time.deltaTime);
     }
 
     private void HandleRotation()
     {
+        Vector3 direction = (cameraPos.transform.forward).normalized;
 
-        //Vector3 direction = (cameraPos.transform.forward).normalized;
+        direction = new Vector3(direction.x, 0, direction.z);
 
-        //direction = new Vector3(direction.x, 0, direction.z);
-
-        //Quaternion rotationBody = Quaternion.LookRotation(direction);
-        //this.transform.rotation = Quaternion.Slerp(this.transform.rotation, rotationBody, Time.deltaTime * 8f);
+        Quaternion rotationBody = Quaternion.LookRotation(direction);
+        this.transform.rotation = Quaternion.Slerp(this.transform.rotation, rotationBody, Time.deltaTime * 8f);
     }
 
     private void HandleAttack()
@@ -126,7 +130,7 @@ public class Player : NetworkBehaviour
 
         mouseDeltaPos *= 0.5f;
 
-        float x = camAngle.x - mouseDeltaPos.y;
+        float x = camAngle.x;
 
         if (x < 180f) x = Mathf.Clamp(x, 0f, 15f);
         else x = Mathf.Clamp(x, 345f, 361f);
