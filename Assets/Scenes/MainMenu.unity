@@ -386,7 +386,7 @@ MonoBehaviour:
   networkAddress: localhost
   maxConnections: 100
   disconnectInactiveConnections: 0
-  disconnectInactiveTimeout: 60
+  disconnectInactiveTimeout: 61.93
   authenticator: {fileID: 0}
   playerPrefab: {fileID: 6826091800825358125, guid: 2668dc1461d3b5942a965b4d2c789cb1, type: 3}
   autoCreatePlayer: 1
