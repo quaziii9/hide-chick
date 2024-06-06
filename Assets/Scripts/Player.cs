@@ -1,111 +1,140 @@
 using Cinemachine;
-using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 using UnityEngine.AI;
-
+using UnityEngine.InputSystem;
 
 public class Player : NetworkBehaviour
 {
-
     [Header("Components")]
-    public NavMeshAgent NavAgent_Player;        // 플레이어 현재 속도 판단용으로 사용
-    public Animator Animator_Player;            // 플레이어 애니메이션 제어용
-    public Transform Transform_Player;          // 플레이어 위치, 회전 제어용
+    public NavMeshAgent NavAgent_Player;
+    public Animator Animator_Player;
+    public Transform Transform_Player;
 
     [Header("Movement")]
-    public float _rotationSpeed = 100.0f;       // 회전 속도 값
+    public float _rotationSpeed = 150.0f;
 
     [Header("Camera")]
-    public CinemachineVirtualCamera PlayerCamera;
+    [SerializeField] private GameObject cameraObject;
+    [SerializeField] private GameObject cameraPos;
+    [SerializeField] private CinemachineVirtualCamera PlayerCamera;
+
+    private Animator animator;
+    private CharacterController cc;
 
     [SyncVar] private Vector2 moveVector = Vector2.zero;
     private Vector2 moveVectorTarget;
     private Vector2 mouseDeltaPos = Vector2.zero;
 
+    private float moveSpeed = 2f;
+    private float delayCount = 0.5f;
+
+    public float MoveSpeed
+    {
+        get { return moveSpeed; }
+        set { moveSpeed = value; }
+    }
+
+    public float DelayCount
+    {
+        get { return delayCount; }
+        set { delayCount = value; }
+    }
+
+    public bool canSprint;
+
     [Header("Attack")]
     public KeyCode _attKey = KeyCode.Mouse0;
 
+    private void Start()
+    {
+        animator = GetComponent<Animator>();
+        cc = GetComponent<CharacterController>();
+
+        canSprint = true;
+
+        if (!isLocalPlayer)
+        {
+            cameraObject.SetActive(false);
+        }
+        else
+        {
+            cameraObject.SetActive(true);
+        }
+    }
 
     private void Update()
     {
-
-        if (CheckIsFocuseOnUpdate() == false)
+        if (!Application.isFocused || !isLocalPlayer)
         {
             return;
         }
-        CheckIsLocalPlayerOnUpdate();
+
+        HandleMovement();
+        HandleRotation();
+        HandleAttack();
     }
 
     private void LateUpdate()
     {
-        if (isLocalPlayer) CamRotate();    // 카메라 회전
+        if (isLocalPlayer)
+        {
+            UpdateCameraPosition();
+        }
     }
 
-    private bool CheckIsFocuseOnUpdate()
+    private void HandleMovement()
     {
-        return Application.isFocused;
+        float vertical = Input.GetAxis("Vertical");
+        Vector3 forward = transform.TransformDirection(Vector3.forward);
+        //animator.SetFloat("XSpeed", moveVector.x);
+        ////animator.SetFloat("ZSpeed", moveVector.y);
+
+        //moveVector = Vector2.Lerp(moveVector, moveVectorTarget * moveSpeed, Time.deltaTime * 5);
+
+        //Vector3 moveVector3 = new Vector3(moveVector.x * 0.5f, Physics.gravity.y, moveVector.y);
+
+        //cc.Move(this.transform.rotation * moveVector3 * Time.deltaTime);
     }
 
-    private void CheckIsLocalPlayerOnUpdate()
+    private void HandleRotation()
     {
-        // isLocalPlayer 검사를 안해주면 게임 내의 모든 오브젝트가 똑같은 로직이 적용됨
-        if (isLocalPlayer == false)
-            return;
 
-        // 회전
-        Vector3 direction = (PlayerCamera.transform.forward).normalized;
+        Vector3 direction = (cameraPos.transform.forward).normalized;
 
         direction = new Vector3(direction.x, 0, direction.z);
 
         Quaternion rotationBody = Quaternion.LookRotation(direction);
         this.transform.rotation = Quaternion.Slerp(this.transform.rotation, rotationBody, Time.deltaTime * 8f);
+    }
 
-        // 이동
-        float vertical = Input.GetAxis("Vertical");
-        Vector3 forward = transform.TransformDirection(Vector3.forward);
-        NavAgent_Player.velocity = forward * Mathf.Max(vertical, 0) * NavAgent_Player.speed;
-        Animator_Player.SetBool("Moving", NavAgent_Player.velocity != Vector3.zero);
-
+    private void HandleAttack()
+    {
         if (Input.GetKeyDown(_attKey))
         {
             CommandAtk();
         }
-
-        RotateLocalPlayer();
     }
 
-    // 서버사이드,
-    [Command]   // 클라이언트에서 호출되어 서버에서 수행
-    void CommandAtk()   // 서버에 내 플레이어의 공격 요청
+    [Command]
+    private void CommandAtk()
     {
         RpcOnAtk();
     }
 
-    [ClientRpc]         // 서버에서 호출되어서 클라이언트에서 수행
-    void RpcOnAtk()     // 서버에 내 플레이어의 공격 애니메이션 재생 요청
+    [ClientRpc]
+    private void RpcOnAtk()
     {
         Animator_Player.SetTrigger("Atk");
     }
 
-    void RotateLocalPlayer()
+    private void UpdateCameraPosition()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit, 100))
-        {
-            Debug.DrawLine(ray.origin, hit.point);
-            Vector3 lookRotate = new Vector3(hit.point.x, Transform_Player.position.y, hit.point.z);
-            Transform_Player.LookAt(lookRotate);
-        }
-    }
+        cameraPos.transform.position = this.transform.position + new Vector3(0, 0, 0);
 
-    void CamRotate()
-    {
-        PlayerCamera.transform.position = this.transform.position + new Vector3(0, 1.5f, 0);
+        Vector3 camAngle = cameraPos.transform.rotation.eulerAngles;
 
-        Vector3 camAngle = PlayerCamera.transform.rotation.eulerAngles;
-
-        mouseDeltaPos *= 0.2f;
+        mouseDeltaPos *= 0.5f;
 
         float x = camAngle.x - mouseDeltaPos.y;
 
@@ -113,11 +142,32 @@ public class Player : NetworkBehaviour
         else x = Mathf.Clamp(x, 345f, 361f);
 
         // 현재 회전 상태와 목표 회전 상태를 쿼터니언으로 변환합니다.
-        Quaternion currentRotation = PlayerCamera.transform.rotation;
+        Quaternion currentRotation = cameraPos.transform.rotation;
         Quaternion targetRotation = Quaternion.Euler(x, camAngle.y + mouseDeltaPos.x, camAngle.z);
 
         // 현재 회전 상태에서 목표 회전 상태로 부드럽게 보간합니다.
-        PlayerCamera.transform.rotation = Quaternion.Slerp(currentRotation, targetRotation, Time.deltaTime * 80);
+        cameraPos.transform.rotation = Quaternion.Slerp(currentRotation, targetRotation, Time.deltaTime * 80);
         mouseDeltaPos *= 0.3f;
+    }
+
+    void OnMove(InputValue inputValue) // 이동(WASD)
+    {
+        Debug.Log($"isLocalPlayer : {isLocalPlayer}");
+        if (isLocalPlayer)
+            moveVectorTarget = inputValue.Get<Vector2>();//인풋 벡터 받아옴
+    }
+
+    void OnSprint(InputValue inputValue)
+    {
+        if (isLocalPlayer)
+        {
+            float value = inputValue.Get<float>();
+            if (canSprint) moveSpeed = (value * 2f) + 2f;
+        }
+    }
+
+    void OnAim(InputValue inputValue)
+    {
+        mouseDeltaPos = inputValue.Get<Vector2>();
     }
 }
