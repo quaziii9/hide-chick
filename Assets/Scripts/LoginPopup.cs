@@ -92,6 +92,7 @@ public class LoginPopup : MonoBehaviour
             return;
 
         var manager = RoomManager.singleton;
+        //var manager = NetworkManager.singleton as RoomManager;
         manager.StartClient();
         //this.gameObject.SetActive(false);
     }

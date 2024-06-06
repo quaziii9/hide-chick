@@ -31,13 +31,6 @@ public partial class NetworkingAuthenticator : NetworkAuthenticator
     #region ServerSide
     [UnityEngine.RuntimeInitializeOnLoadMethod]
 
-
-    private void Update()
-    {
-        string playerNamesString = string.Join(", ", _playerNames);
-        Debug.Log(playerNamesString);
-
-    }
     static void ResetStatics()
     {
 
@@ -67,7 +60,7 @@ public partial class NetworkingAuthenticator : NetworkAuthenticator
     {
         // 클라 인증 요청 메세지 도착 시 처리
         Debug.Log($"인증 요청 : {msg.authUserName}");
-        Debug.Log(!_playerNames.Contains(msg.authUserName));
+
         // 이미연결 대기 중인 클라이언트는 무시
         if (_connectionPendingDisconnect.Contains(conn)) return;
 

@@ -35,7 +35,6 @@ public class RoomManager : NetworkRoomManager
 
     public override void ServerChangeScene(string newSceneName)
     {
-        Debug.Log("?");
         // 씬 전환 전에 모든 로비 플레이어를 비활성화 또는 제거
         foreach (var conn in NetworkServer.connections.Values)
         {
