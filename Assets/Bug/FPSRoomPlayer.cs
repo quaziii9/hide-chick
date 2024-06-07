@@ -9,31 +9,20 @@ public class FPSRoomPlayer : NetworkRoomPlayer
     [SyncVar]
     public string PlayerName;
 
-    private TextMeshProUGUI NickName;
+    public TextMeshProUGUI NickName;
 
     public override void OnStartServer()
     {
         PlayerName = Database.Instance.PlayerNickName;
-    }
-
-    public override void OnStartClient()
-    {
-        base.OnStartClient();
-        SetPlayerNameText();
-
-    }
-
-
-    private void SetPlayerNameText()
-    {
         NickName.text = Database.Instance.PlayerNickName;
     }
+
 
     private void Start()
     {
         base.Start();
-
-        SetPlayerNameText();
+        PlayerName = Database.Instance.PlayerNickName;
+        NickName.text = Database.Instance.PlayerNickName;
 
         //LobbyUIManager.Instance.GameRoomPlayerCounter.UpdatePlayerCount();
 

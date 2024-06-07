@@ -166,6 +166,7 @@ MonoBehaviour:
   readyToBegin: 0
   index: 0
   PlayerName: 
+  NickName: {fileID: 7555020652418613809}
 --- !u!1 &6048319789278978254
 GameObject:
   m_ObjectHideFlags: 0
