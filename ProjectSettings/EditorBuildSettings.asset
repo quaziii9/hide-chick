@@ -8,16 +8,16 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/MainMenu.unity
     guid: 2d5d3e871b04a7b4d9a939e0103224fc
-  - enabled: 0
+  - enabled: 1
     path: Assets/Bug/MainMenu2.unity
     guid: 108725472c22658469f949cbe4274c58
-  - enabled: 0
+  - enabled: 1
     path: Assets/Bug/LobbyRoom.unity
     guid: 342f7c669f49e2d49bf804886a3cd67b
-  - enabled: 0
+  - enabled: 1
     path: Assets/Bug/PlayRoom.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Eunjoo.unity
     guid: 6d430baba069055439bf65e0a2dc6bb7
   m_configObjects:

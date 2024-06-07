@@ -5,7 +5,7 @@ using System;
 using System.Data;
 using TMPro;
 
-public class Database : MonoBehaviour
+public class Database : Singleton<Database>
 {
     [Header("UI")]
     [SerializeField] TMP_InputField Input_Id;
@@ -22,6 +22,7 @@ public class Database : MonoBehaviour
 
     private static MySqlConnection _dbConnection;
 
+    public string PlayerNickName;
 
     public void Start()
     {
@@ -34,7 +35,6 @@ public class Database : MonoBehaviour
         if (queryStr.Contains("SELECT"))
         {
             DataSet dataSet = OnSelectRequest(queryStr, tableName);
-
         }
         else // 없다면 Insert 또는 Update 관련 쿼리
         {
@@ -182,7 +182,12 @@ public class Database : MonoBehaviour
             if (dbPassword == Password)
             {
                 Text_Log.text = "로그인 성공!";
+
+                PlayerNickName = Nickname;
                 OnClick_CloseDatabaseUI();
+
+                LoginPopup.Instance.popup.SetActive(true);
+                LoginPopup.Instance.setnickName(PlayerNickName);
             }
             else
             {
@@ -194,6 +199,8 @@ public class Database : MonoBehaviour
             Text_Log.text = "닉네임이 존재하지 않습니다.";
         }
     }
+
+   
 
     public void OnClick_OpenDatabaseUI()
     {
