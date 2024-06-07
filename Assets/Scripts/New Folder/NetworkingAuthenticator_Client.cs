@@ -26,6 +26,7 @@ public partial class NetworkingAuthenticator
         NetworkClient.UnregisterHandler<AuthResMsg>();
     }
 
+    // 클라에서 인증 요청 시 불려짐
     public override void OnClientAuthenticate()
     {
         NetworkClient.Send(new AuthReqMsg { authUserName = _playerName });

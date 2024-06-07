@@ -2362,9 +2362,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  showRoomGUI: 1
-  readyToBegin: 0
-  index: 0
+  PlayerName: 
 --- !u!1 &7293398843251791903
 GameObject:
   m_ObjectHideFlags: 0

@@ -17,7 +17,7 @@ public class LoginPopup : MonoBehaviour
 
     [SerializeField] internal TextMeshProUGUI Text_Error;
 
-    [SerializeField] RoomManager _netManager;
+    [SerializeField] NetworkingManager _netManager;
 
     // LoginPopup 클래스의 정적 인스턴스 변수(단일 인스턴스를 저장)
     // private set을 사용하여 외부에서 인스턴스 변경할수 없음
@@ -81,9 +81,9 @@ public class LoginPopup : MonoBehaviour
         if (_netManager == null)
             return;
 
-        var manager = NetworkManager.singleton as RoomManager;
-        manager.StartHost();
-        //this.gameObject.SetActive(false);
+        //var manager = NetworkManager.singleton as RoomManager;
+        _netManager.StartHost();
+        this.gameObject.SetActive(false);
     }
 
     public void OnClick_StartAsClient()
@@ -91,9 +91,9 @@ public class LoginPopup : MonoBehaviour
         if (_netManager == null)
             return;
 
-        var manager = RoomManager.singleton;
+        //var manager = RoomManager.singleton;
         //var manager = NetworkManager.singleton as RoomManager;
-        manager.StartClient();
-        //this.gameObject.SetActive(false);
+        _netManager.StartClient();
+      this.gameObject.SetActive(false);
     }
 }
