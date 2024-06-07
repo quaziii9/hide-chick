@@ -18,7 +18,7 @@ public partial class NetworkingAuthenticator
 
     public override void OnStartClient()
     {
-        Debug.Log("?");//
+        Debug.Log("Client started");
         NetworkClient.RegisterHandler<AuthResMsg>(OnAuthResponseMessage, false);
     }
 
@@ -27,7 +27,6 @@ public partial class NetworkingAuthenticator
         NetworkClient.UnregisterHandler<AuthResMsg>();
     }
 
-    // 클라에서 인증 요청 시 불려짐
     public override void OnClientAuthenticate()
     {
         NetworkClient.Send(new AuthReqMsg { authUserName = _playerName });
@@ -36,7 +35,7 @@ public partial class NetworkingAuthenticator
     public void OnAuthResponseMessage(AuthResMsg msg)
     {
         Debug.Log(msg.code);
-        if (msg.code == 100) // 성공
+        if (msg.code == 100)
         {
             Debug.Log($"Auth Response:{msg.code} {msg.message}");
             ClientAccept();
@@ -45,7 +44,6 @@ public partial class NetworkingAuthenticator
         {
             Debug.LogError($"Auth Response: {msg.code} {msg.message}");
             NetworkManager.singleton.StopHost();
-
             _loginPopup.SetUIOnAuthError(msg.message);
         }
     }

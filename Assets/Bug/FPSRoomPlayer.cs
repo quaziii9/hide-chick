@@ -9,8 +9,8 @@ public class FPSRoomPlayer : NetworkRoomPlayer
     [SyncVar]
     public string PlayerName;
 
-
     private TextMeshProUGUI NickName;
+
     public override void OnStartServer()
     {
         PlayerName = (string)connectionToClient.authenticationData;
@@ -21,7 +21,6 @@ public class FPSRoomPlayer : NetworkRoomPlayer
         base.OnStartClient();
         SetPlayerNameText();
     }
-
 
     private void OnPlayerNameChanged(string oldName, string newName)
     {
@@ -40,6 +39,7 @@ public class FPSRoomPlayer : NetworkRoomPlayer
             NickName.text = PlayerName;
         }
     }
+
     private void Start()
     {
         base.Start();
@@ -49,8 +49,6 @@ public class FPSRoomPlayer : NetworkRoomPlayer
         //{
         //    LobbyUIManager.Instance.ActiveStartButton();
         //}
-
-
     }
 
     private void OnDestroy()
@@ -60,5 +58,4 @@ public class FPSRoomPlayer : NetworkRoomPlayer
         //    LobbyUIManager.Instance.GameRoomPlayerCounter.UpdatePlayerCount();
         //}
     }
-
 }

@@ -19,7 +19,7 @@ public class LoginPopup : Singleton<LoginPopup>
 
     [SerializeField] internal TextMeshProUGUI Text_Error;
 
-    [SerializeField] /*NetworkingManager*/ RoomManager _netManager;
+    [SerializeField] NetworkingManager /*RoomManager*/ _netManager;
 
     // LoginPopup 클래스의 정적 인스턴스 변수(단일 인스턴스를 저장)
     // private set을 사용하여 외부에서 인스턴스 변경할수 없음
