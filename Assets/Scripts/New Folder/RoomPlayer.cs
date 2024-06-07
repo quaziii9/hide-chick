@@ -9,7 +9,8 @@ public class RoomPlayer : NetworkBehaviour
     [SyncVar]
     public string PlayerName;
 
-    // private TextMeshProUGUI NickName;
+
+    private TextMeshProUGUI NickName;
 
 
     public void Awake()
@@ -22,28 +23,28 @@ public class RoomPlayer : NetworkBehaviour
         PlayerName = (string)connectionToClient.authenticationData;
     }
 
-    //public override void OnStartClient()
-    //{
-    //    base.OnStartClient();
-    //    SetPlayerNameText();
-    //}
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+        SetPlayerNameText();
+    }
 
 
-    //private void OnPlayerNameChanged(string oldName, string newName)
-    //{
-    //    SetPlayerNameText();
-    //}
+    private void OnPlayerNameChanged(string oldName, string newName)
+    {
+        SetPlayerNameText();
+    }
 
-    //private void SetPlayerNameText()
-    //{
-    //    if (NickName == null)
-    //    {
-    //        NickName = GetComponentInChildren<TextMeshProUGUI>();
-    //    }
+    private void SetPlayerNameText()
+    {
+        if (NickName == null)
+        {
+            NickName = GetComponentInChildren<TextMeshProUGUI>();
+        }
 
-    //    if (NickName != null)
-    //    {
-    //        NickName.text = PlayerName;
-    //    }
-    //}
+        if (NickName != null)
+        {
+            NickName.text = PlayerName;
+        }
+    }
 }
