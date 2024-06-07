@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.43667555, g: 0.48427176, b: 0.56452405, a: 1}
+  m_IndirectSpecularColor: {r: 0.4366756, g: 0.48427194, b: 0.5645252, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -239,8 +239,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 384044d74cd05674b93322cf713fdf89, type: 2}
-  m_sharedMaterial: {fileID: 6667300707525092643, guid: 384044d74cd05674b93322cf713fdf89, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: d5c23d7a21a1f56448cc4a451bc44aac, type: 2}
+  m_sharedMaterial: {fileID: 8919083968554112722, guid: d5c23d7a21a1f56448cc4a451bc44aac, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1059,7 +1059,7 @@ MonoBehaviour:
   Input_Id: {fileID: 1695415785}
   Input_Password: {fileID: 476274131}
   Text_Log: {fileID: 159182409}
-  _ip: 3.38.210.157
+  _ip: 3.36.99.143
   _dbName: login
   _uid: root
   _pwd: 1234
