@@ -4,7 +4,7 @@ using Mirror;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
 
-public class Player : NetworkBehaviour
+public class PlayerController : NetworkBehaviour
 {
     [Header("Components")]
     public NavMeshAgent NavAgent_Player;

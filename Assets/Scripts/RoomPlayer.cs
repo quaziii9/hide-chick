@@ -2,7 +2,7 @@ using Mirror;
 using TMPro;
 using UnityEngine;
 
-public class FPSRoomPlayer : NetworkRoomPlayer
+public class RoomPlayer : NetworkRoomPlayer
 {
     [SyncVar(hook = nameof(OnPlayerNameChanged))]
     public string PlayerName;
