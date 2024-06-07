@@ -3,18 +3,18 @@ using UnityEngine.UI;
 using MySql.Data.MySqlClient;
 using System;
 using System.Data;
-using Unity.VisualScripting;
+using TMPro;
 
 public class Database : MonoBehaviour
 {
     [Header("UI")]
-    [SerializeField] InputField Input_Query;
-    [SerializeField] Text Text_DBResult;
-    [SerializeField] Text Text_Log;
+    [SerializeField] TMP_InputField Input_Id;
+    [SerializeField] TMP_InputField Input_Password;
+    [SerializeField] TextMeshProUGUI Text_Log;
 
     [Header("ConnectionInfo")]
-    [SerializeField] string _ip = "127.0.0.1";
-    [SerializeField] string _dbName = "test";
+    [SerializeField] string _ip = "3.38.210.157";
+    [SerializeField] string _dbName = "login";
     [SerializeField] string _uid = "root";
     [SerializeField] string _pwd = "1234";
 
@@ -22,9 +22,10 @@ public class Database : MonoBehaviour
 
     private static MySqlConnection _dbConnection;
 
-    private void Awake()
+
+    public void Start()
     {
-        this.gameObject.SetActive(false);
+        TestDBConnect();
     }
 
     private void SendQuery(string queryStr, string tableName)
@@ -33,11 +34,15 @@ public class Database : MonoBehaviour
         if (queryStr.Contains("SELECT"))
         {
             DataSet dataSet = OnSelectRequest(queryStr, tableName);
-            Text_DBResult.text = DeformatResult(dataSet);
+
         }
         else // 없다면 Insert 또는 Update 관련 쿼리
         {
-            Text_DBResult.text = OnInsertOnUpdateRequest(queryStr) ? "성공" : "실패";
+            bool isSuccess = OnInsertOnUpdateRequest(queryStr);
+            if (isSuccess)
+            {
+                Text_Log.text = "회원가입이 완료되었습니다!";
+            }
         }
     }
 
@@ -54,10 +59,25 @@ public class Database : MonoBehaviour
             _dbConnection.Close();
             return true;
         }
-        catch
+        catch (MySqlException ex)
         {
-            return false;
-
+            if (ex.Number == 1062) // Duplicate entry error code
+            {
+                Debug.LogWarning("같은 아이디가 있습니다.");
+                return false;
+            }
+            else
+            {
+                Debug.LogWarning(ex.Message);
+                return false;
+            }
+        }
+        finally
+        {
+            if (_dbConnection.State == ConnectionState.Open)
+            {
+                _dbConnection.Close();
+            }
         }
     }
 
@@ -123,25 +143,56 @@ public class Database : MonoBehaviour
         }
     }
 
-    public void OnClick_TestDBConnect()
+    public void TestDBConnect()
     {
         _isConnectTestComplete = ConnectTest();
     }
 
-    public void OnSubmit_SendQuery()
+    public void OnSubmit_SendRegisterQuery()
     {
-        if (_isConnectTestComplete == false)
-        {
-            Text_Log.text = "DB 연결을 먼저 시도해주세요";
-            return;
-        }
-
         Text_Log.text = string.Empty;
 
-        string query = string.IsNullOrWhiteSpace(Input_Query.text) ? "SELECT U_Name,U_Password FROM user_info"
-            : Input_Query.text;
+        Debug.Log("?");
+        string RegisterQuery = $"INSERT INTO login (NickName, Password) VALUES('{Input_Id.text}', '{Input_Password.text}');";
 
-        SendQuery(query, "user_info");
+        bool isSuccess = OnInsertOnUpdateRequest(RegisterQuery);
+        if (isSuccess)
+        {
+            Text_Log.text = "회원가입이 완료되었습니다!";
+        }
+        else
+        {
+            Text_Log.text = "같은 아이디가 있습니다.";
+        }
+    }
+
+    public void OnSubmit_Login()
+    {
+        Text_Log.text = string.Empty;
+
+        string Nickname = Input_Id.text;
+        string Password = Input_Password.text;
+
+        string query = $"SELECT Password FROM login WHERE NickName='{Nickname}';";
+        DataSet dataSet = OnSelectRequest(query, "login");
+
+        if (dataSet != null && dataSet.Tables.Count > 0 && dataSet.Tables[0].Rows.Count > 0)
+        {
+            string dbPassword = dataSet.Tables[0].Rows[0]["Password"].ToString();
+            if (dbPassword == Password)
+            {
+                Text_Log.text = "로그인 성공!";
+                OnClick_CloseDatabaseUI();
+            }
+            else
+            {
+                Text_Log.text = "비밀번호가 일치하지 않습니다.";
+            }
+        }
+        else
+        {
+            Text_Log.text = "닉네임이 존재하지 않습니다.";
+        }
     }
 
     public void OnClick_OpenDatabaseUI()
@@ -153,5 +204,4 @@ public class Database : MonoBehaviour
     {
         this.gameObject.SetActive(false);
     }
-
 }
