@@ -2,9 +2,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using Mirror;
 using TMPro;
+using Unity.VisualScripting;
 
-public class LoginPopup : MonoBehaviour
+public class LoginPopup : Singleton<LoginPopup>
 {
+    //
     // internal
     // 동일 어셈블리(프로젝트) 내에서만 접근가능
 
@@ -17,18 +19,21 @@ public class LoginPopup : MonoBehaviour
 
     [SerializeField] internal TextMeshProUGUI Text_Error;
 
-    [SerializeField] NetworkingManager _netManager;
+    [SerializeField] /*NetworkingManager*/ RoomManager _netManager;
 
     // LoginPopup 클래스의 정적 인스턴스 변수(단일 인스턴스를 저장)
     // private set을 사용하여 외부에서 인스턴스 변경할수 없음
-    public static LoginPopup instance { get; private set; }
+    //public static LoginPopup instance { get; private set; }
+
+    public GameObject popup; 
 
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         // instance를 현재 객체로 설정하여 싱글톤 인스턴스 초기화,
         // Loginpopup 클래스의 인스턴스가 하나만 존재하도록 보장
-        instance = this;
+        //instance = this;
         Text_Error.gameObject.SetActive(false);
     }
 
@@ -48,7 +53,7 @@ public class LoginPopup : MonoBehaviour
 
     public void SetUIOnClientDisconnected()
     {
-        this.gameObject.SetActive(true);
+        popup.SetActive(true);
         // 사용자 이름 입력 필드의 내용을 지움
         Input_UserName.text = string.Empty;
         // 사용자 이름 입력 필드에 포커스를 맞춤
@@ -64,6 +69,7 @@ public class LoginPopup : MonoBehaviour
 
     public void SetUIOnAuthError(string msg)
     {
+        Debug.Log("?");
         Text_Error.text = msg;
         Text_Error.gameObject.SetActive(true);
     }
@@ -83,7 +89,7 @@ public class LoginPopup : MonoBehaviour
 
         //var manager = NetworkManager.singleton as RoomManager;
         _netManager.StartHost();
-        this.gameObject.SetActive(false);
+        popup.SetActive(false);
     }
 
     public void OnClick_StartAsClient()
@@ -94,6 +100,6 @@ public class LoginPopup : MonoBehaviour
         //var manager = RoomManager.singleton;
         //var manager = NetworkManager.singleton as RoomManager;
         _netManager.StartClient();
-      this.gameObject.SetActive(false);
+      popup.SetActive(false);
     }
 }

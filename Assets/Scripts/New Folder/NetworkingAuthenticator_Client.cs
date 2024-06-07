@@ -18,6 +18,7 @@ public partial class NetworkingAuthenticator
 
     public override void OnStartClient()
     {
+        Debug.Log("?");//
         NetworkClient.RegisterHandler<AuthResMsg>(OnAuthResponseMessage, false);
     }
 
@@ -34,6 +35,7 @@ public partial class NetworkingAuthenticator
 
     public void OnAuthResponseMessage(AuthResMsg msg)
     {
+        Debug.Log(msg.code);
         if (msg.code == 100) // 성공
         {
             Debug.Log($"Auth Response:{msg.code} {msg.message}");

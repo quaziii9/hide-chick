@@ -64,7 +64,7 @@ public partial class NetworkingAuthenticator : NetworkAuthenticator
                 code = 100,
                 message = "Auth Success"
             };
-
+            Debug.Log("?");
             conn.Send(authResMsg);
             ServerAccept(conn);
         }
