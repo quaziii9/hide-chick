@@ -2797,7 +2797,7 @@ MonoBehaviour:
   disconnectInactiveConnections: 0
   disconnectInactiveTimeout: 60
   authenticator: {fileID: 0}
-  playerPrefab: {fileID: 6826091800825358125, guid: 2668dc1461d3b5942a965b4d2c789cb1, type: 3}
+  playerPrefab: {fileID: 2513575521597329092, guid: 2ce0658226244ab4c9b8d8a86e7eef65, type: 3}
   autoCreatePlayer: 1
   playerSpawnMethod: 0
   spawnPrefabs:
@@ -4295,5 +4295,4 @@ MonoBehaviour:
   Btn_StartAsHostServer: {fileID: 1244606127}
   Btn_StartAsClient: {fileID: 1496963337}
   Text_Error: {fileID: 1665958572}
-  _netManager: {fileID: 1455454422}
   popup: {fileID: 1743262004}

@@ -3,6 +3,7 @@ using UnityEngine;
 using Mirror;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
+using TMPro;
 
 public class PlayerController : NetworkBehaviour
 {
@@ -33,17 +34,19 @@ public class PlayerController : NetworkBehaviour
         cc = GetComponent<CharacterController>();
         
         Debug.Log(Database.Instance.PlayerNickName + " : " + isLocalPlayer);
+        SetCameraPosition();
 
         if (!isLocalPlayer)
         {
+            Debug.Log("camera false");
             cameraObject.SetActive(false);
         }
         else
         {
+            Debug.Log("camera true");
             cameraObject.SetActive(true);
         }
 
-        SetCameraPosition();
 
     }
 
@@ -119,6 +122,7 @@ public class PlayerController : NetworkBehaviour
         cameraPos.transform.position = this.transform.position + new Vector3(0, 0, 0);
 
         Vector3 camAngle = cameraPos.transform.rotation.eulerAngles;
+        Debug.Log("setcamera");
     }
 
     private void UpdateCameraPosition()
@@ -142,22 +146,6 @@ public class PlayerController : NetworkBehaviour
         cameraPos.transform.rotation = Quaternion.Slerp(currentRotation, targetRotation, Time.deltaTime * 80);
         mouseDeltaPos *= 0.3f;
     }
-
-    //void OnMove(InputValue inputValue) // 이동(WASD)
-    //{
-    //    Debug.Log($"isLocalPlayer : {isLocalPlayer}");
-    //    if (isLocalPlayer)
-    //        moveVectorTarget = inputValue.Get<Vector2>();//인풋 벡터 받아옴
-    //}
-
-    //void OnSprint(InputValue inputValue)
-    //{
-    //    if (isLocalPlayer)
-    //    {
-    //        float value = inputValue.Get<float>();
-    //        moveSpeed = (value * 2f) + 2f;
-    //    }
-    //}
 
     void OnAim(InputValue inputValue)
     {
