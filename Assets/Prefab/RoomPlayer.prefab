@@ -1817,7 +1817,6 @@ GameObject:
   - component: {fileID: 2550622617013176669}
   - component: {fileID: 933752736940337878}
   - component: {fileID: 6718710586412428308}
-  - component: {fileID: 3848462387370587317}
   m_Layer: 0
   m_Name: SkeletonMesh
   m_TagString: Untagged
@@ -1972,7 +1971,6 @@ MonoBehaviour:
   cameraPos: {fileID: 6048319789278978254}
   PlayerCamera: {fileID: 2165151841460487053}
   _attKey: 323
-  LoadingImage: {fileID: 0}
 --- !u!114 &6718710586412428308
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1990,28 +1988,6 @@ MonoBehaviour:
   syncInterval: 0
   clientAuthority: 1
   animator: {fileID: 6819928917654252293}
---- !u!114 &3848462387370587317
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6819928917661669593}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9d53ccac70b2ec548ae70fae9461560d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncDirection: 0
-  syncMode: 0
-  syncInterval: 0
-  NavAgent_Player: {fileID: 6819928917654252292}
-  Animator_Player: {fileID: 6819928917654252293}
-  Transform_Player: {fileID: 6819928917661762809}
-  cameraObject: {fileID: 7669876791853116941}
-  cameraPos: {fileID: 6048319789278978254}
-  PlayerCamera: {fileID: 2165151841460487053}
-  _attKey: 323
 --- !u!1 &6819928917661669595
 GameObject:
   m_ObjectHideFlags: 0
