@@ -15,6 +15,7 @@ public class PlayerController : NetworkBehaviour
     public NavMeshAgent NavAgent_Player;
     private Animator Animator_Player;
     public Transform Transform_Player;
+    public GameObject weapon; 
 
     [Header("Camera")]
     [SerializeField] private GameObject cameraObject;
@@ -111,8 +112,19 @@ public class PlayerController : NetworkBehaviour
         {
             Animator_Player.SetTrigger("Atk");
 
-            EventManager<UIEvents>.TriggerEvent(UIEvents.atkTime);
+            EventManager<UIEvents>.TriggerEvent(UIEvents.atkTime);            
         }
+    }
+
+    public void WeaponColliderTrue()
+    {
+        Collider weaponCollider = weapon.GetComponent<Collider>();
+        weaponCollider.enabled = true;
+    }
+    public void WeaponColliderFalse()
+    {
+        Collider weaponCollider = weapon.GetComponent<Collider>();
+        weaponCollider.enabled = false;;
     }
 
     private void isAtkTrue()
@@ -153,5 +165,4 @@ public class PlayerController : NetworkBehaviour
     {
         mouseDeltaPos = inputValue.Get<Vector2>();
     }
-
 }

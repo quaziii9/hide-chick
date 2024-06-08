@@ -132,12 +132,12 @@ namespace EventLibrary
                     if (eventDictionary.TryGetValue(eventName, out var thisEvent) && thisEvent is GenericEvent<T> genericEvent)
                     {
                         genericEvent.Invoke(parameter);
-                        Debug.Log($"Event triggered: {eventName} with parameter: {parameter}");
+                       // Debug.Log($"Event triggered: {eventName} with parameter: {parameter}");
                     }
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError($"Error triggering event {eventName} with parameter {parameter}: {e.Message}");
+                    //Debug.LogError($"Error triggering event {eventName} with parameter {parameter}: {e.Message}");
                 }
             }
         }
@@ -151,12 +151,12 @@ namespace EventLibrary
                     if (eventDictionary.TryGetValue(eventName, out var thisEvent) && thisEvent is UnityEvent unityEvent)
                     {
                         unityEvent.Invoke();
-                        Debug.Log($"Event triggered: {eventName}");
+                       // Debug.Log($"Event triggered: {eventName}");
                     }
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError($"Error triggering event {eventName}: {e.Message}");
+                   // Debug.LogError($"Error triggering event {eventName}: {e.Message}");
                 }
             }
         }
