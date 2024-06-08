@@ -14,6 +14,5 @@ public class LoadingUI : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         gameObject.SetActive(false);
-
     }
 }

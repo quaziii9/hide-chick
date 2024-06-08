@@ -6,6 +6,8 @@ using UnityEngine.InputSystem;
 using TMPro;
 using System.Collections;
 using UnityEngine.UI;
+using EnumTypes;
+using EventLibrary;
 
 public class PlayerController : NetworkBehaviour
 {
@@ -26,6 +28,7 @@ public class PlayerController : NetworkBehaviour
     public KeyCode _attKey = KeyCode.Mouse0;
 
     private bool isMovementEnabled = false;
+    public bool isAtk = true;
 
     private void Start()
     {
@@ -42,18 +45,16 @@ public class PlayerController : NetworkBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        EventManager<PlayerEvents>.StartListening(PlayerEvents.isAtkTrue, isAtkTrue);
+        EventManager<PlayerEvents>.StartListening(PlayerEvents.isAtkFalse, isAtkFalse);
+    }
+
     private IEnumerator EnableMovementAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
         isMovementEnabled = true;
-    }
-
-
-
-    private void InitializeLocalPlayer()
-    {
-        cameraObject.SetActive(true);
-        SetCameraPositionImmediate();
     }
 
     private void Update()
@@ -79,8 +80,7 @@ public class PlayerController : NetworkBehaviour
     private void HandleMovement()
     {
         // 로컬 플레이어의 이동
-        Animator_Player.SetFloat("Speed", NavAgent_Player.velocity.magnitude);
-        Debug.Log(NavAgent_Player.velocity.magnitude);
+        Animator_Player.SetFloat("Speed", NavAgent_Player.velocity.magnitude); 
 
         float vertical = Input.GetAxis("Vertical");
         Vector3 forward = transform.TransformDirection(Vector3.forward);
@@ -107,17 +107,25 @@ public class PlayerController : NetworkBehaviour
 
     private void HandleAttack()
     {
-        if (Input.GetKeyDown(_attKey))
+        if (Input.GetKeyDown(_attKey) &&isAtk == true)
         {
             Animator_Player.SetTrigger("Atk");
+
+            EventManager<UIEvents>.TriggerEvent(UIEvents.atkTime);
         }
     }
 
-    private void SetCameraPositionImmediate()
+    private void isAtkTrue()
     {
-        cameraPos.transform.position = this.transform.position + new Vector3(0, 0, 0);
-        cameraPos.transform.rotation = Quaternion.Euler(0, 0, 0); // 초기 회전 설정
+        isAtk = true;
     }
+
+    private void isAtkFalse()
+    {
+        isAtk = false;
+    }
+
+
 
     private void UpdateCameraPosition()
     {
@@ -145,4 +153,5 @@ public class PlayerController : NetworkBehaviour
     {
         mouseDeltaPos = inputValue.Get<Vector2>();
     }
+
 }

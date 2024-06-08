@@ -34,6 +34,7 @@ public class LoginPopup : Singleton<LoginPopup>
         Text_Error.gameObject.SetActive(false);
     }
 
+
     public void setnickName(string PlayerNickName)
     {
         NickName.text = PlayerNickName;
