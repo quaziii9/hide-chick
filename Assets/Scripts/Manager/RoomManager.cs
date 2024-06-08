@@ -35,8 +35,7 @@ public class RoomManager : NetworkRoomManager
         {
             Vector3 spawnPos = FindObjectOfType<SpawnPositions>().GetSpawnPosition();
             GameObject player = Instantiate(spawnPrefabs[0], spawnPos, Quaternion.identity);
-            NetworkServer.AddPlayerForConnection(conn, player);
-            NetworkServer.Spawn(player, conn);
+            NetworkServer.AddPlayerForConnection(conn, player);            
         }
         else
         {

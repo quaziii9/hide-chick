@@ -32,8 +32,8 @@ public class RoomPlayerController : NetworkBehaviour
     public KeyCode _attKey = KeyCode.Mouse0;
 
     private bool isMovementEnabled = false;
-    [Header("Stats Server")]
-    [SyncVar(hook = nameof(OnSpeedChanged))] private float syncSpeed;
+   // [Header("Stats Server")]
+   // [SyncVar(hook = nameof(OnSpeedChanged))] private float syncSpeed;
 
     private void Start()
     {
@@ -107,12 +107,10 @@ public class RoomPlayerController : NetworkBehaviour
 
         NavAgent_Player.velocity = forward * Mathf.Max(vertical, 0) * playerSpeed;
 
-        //Animator_Player.SetBool("Moving", NavAgent_Player.velocity.sqrMagnitude > 0.1f);
-        //Animator_Player.SetBool("Dashing", NavAgent_Player.velocity.sqrMagnitude > 9.0f);
 
-        //Animator_Player.SetFloat("Speed", NavAgent_Player.velocity.magnitude);
+        //CmdSetSpeed(NavAgent_Player.velocity.magnitude);
 
-        CmdSetSpeed(NavAgent_Player.velocity.magnitude);
+        Animator_Player.SetFloat("Speed", NavAgent_Player.velocity.magnitude);
     }
 
     private void HandleRotation()
@@ -140,10 +138,10 @@ public class RoomPlayerController : NetworkBehaviour
     }
 
     [Command]
-    private void CmdSetSpeed(float speed)
-    {
-        syncSpeed = speed;
-    }
+    //private void CmdSetSpeed(float speed)
+    //{
+    //    syncSpeed = speed;
+    //}
     private void OnSpeedChanged(float oldSpeed, float newSpeed)
     {
         Animator_Player.SetFloat("Speed", newSpeed);

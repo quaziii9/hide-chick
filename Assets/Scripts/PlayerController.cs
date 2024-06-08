@@ -11,7 +11,7 @@ public class PlayerController : NetworkBehaviour
 {
     [Header("Components")]
     public NavMeshAgent NavAgent_Player;
-    public Animator Animator_Player;
+    private Animator Animator_Player;
     public Transform Transform_Player;
 
     [Header("Camera")]
@@ -33,12 +33,12 @@ public class PlayerController : NetworkBehaviour
 
     private bool isMovementEnabled = false;
     [SerializeField] GameObject LoadingImage;
-    [Header("Stats Server")]
-    [SyncVar(hook = nameof(OnSpeedChanged))] private float syncSpeed;
+    //[Header("Stats Server")]
+    //[SyncVar(hook = nameof(OnSpeedChanged))] private float syncSpeed;
 
     private void Start()
     {
-        cc = GetComponent<CharacterController>();
+        Animator_Player = GetComponent<Animator>();
 
         if (!isLocalPlayer)
         {
@@ -85,17 +85,20 @@ public class PlayerController : NetworkBehaviour
         }
     }
 
-    [Command]
-    private void CommandMove()
-    {
-        HandleMovement();
-    }
+    //[Command]
+    //private void CommandMove()
+    //{
+    //    HandleMovement();
+    //}
 
 
     //    [ClientRpc]
     private void HandleMovement()
     {
         // 로컬 플레이어의 이동
+        Animator_Player.SetFloat("Speed", NavAgent_Player.velocity.magnitude);
+        Debug.Log(NavAgent_Player.velocity.magnitude);
+
         float vertical = Input.GetAxis("Vertical");
         Vector3 forward = transform.TransformDirection(Vector3.forward);
 
@@ -113,7 +116,7 @@ public class PlayerController : NetworkBehaviour
 
         //Animator_Player.SetFloat("Speed", NavAgent_Player.velocity.magnitude);
 
-        CmdSetSpeed(NavAgent_Player.velocity.magnitude);
+        //CmdSetSpeed(NavAgent_Player.velocity.magnitude);
     }
 
     private void HandleRotation()
@@ -130,31 +133,32 @@ public class PlayerController : NetworkBehaviour
     {
         if (Input.GetKeyDown(_attKey))
         {
-            CommandAtk();
+            Animator_Player.SetTrigger("Atk");
+            //CommandAtk();
         }
     }
 
-    [Command]
-    private void CommandAtk()
-    {
-        RpcOnAtk();
-    }
+    //[Command]
+    //private void CommandAtk()
+    //{
+    //    RpcOnAtk();
+    //}
 
-    [Command]
-    private void CmdSetSpeed(float speed)
-    {
-        syncSpeed = speed;
-    }
-    private void OnSpeedChanged(float oldSpeed, float newSpeed)
-    {
-        Animator_Player.SetFloat("Speed", newSpeed);
-    }
+    //[Command]
+    //private void CmdSetSpeed(float speed)
+    //{
+    //    syncSpeed = speed;
+    //}
+    //private void OnSpeedChanged(float oldSpeed, float newSpeed)
+    //{
+    //    Animator_Player.SetFloat("Speed", newSpeed);
+    //}
 
-    [ClientRpc]
-    private void RpcOnAtk()
-    {
-        Animator_Player.SetTrigger("Atk");
-    }
+    //[ClientRpc]
+    //private void RpcOnAtk()
+    //{
+    //    Animator_Player.SetTrigger("Atk");
+    //}
 
     private void SetCameraPositionImmediate()
     {

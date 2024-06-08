@@ -1958,7 +1958,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6819928917661669593}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e40b8919ccd46234497096fc0dff8e36, type: 3}
   m_Name: 
@@ -1967,7 +1967,6 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   NavAgent_Player: {fileID: 6819928917654252292}
-  Animator_Player: {fileID: 6819928917654252293}
   Transform_Player: {fileID: 6819928917661762809}
   cameraObject: {fileID: 7669876791853116941}
   cameraPos: {fileID: 6048319789278978254}
@@ -1998,7 +1997,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6819928917661669593}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9d53ccac70b2ec548ae70fae9461560d, type: 3}
   m_Name: 
