@@ -33,6 +33,8 @@ public class PlayerController : NetworkBehaviour
 
     private bool isMovementEnabled = false;
     [SerializeField] GameObject LoadingImage;
+    [Header("Stats Server")]
+    [SyncVar(hook = nameof(OnSpeedChanged))] private float syncSpeed;
 
     private void Start()
     {
@@ -45,7 +47,7 @@ public class PlayerController : NetworkBehaviour
         else
         { 
             cameraObject.SetActive(true);
-            StartCoroutine(EnableMovementAfterDelay(3.0f));
+            StartCoroutine(EnableMovementAfterDelay(2.0f));
         }
     }
 
@@ -97,7 +99,21 @@ public class PlayerController : NetworkBehaviour
         float vertical = Input.GetAxis("Vertical");
         Vector3 forward = transform.TransformDirection(Vector3.forward);
 
-        NavAgent_Player.velocity = forward * Mathf.Max(vertical, 0) * NavAgent_Player.speed;
+        float playerSpeed = NavAgent_Player.speed;
+
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            playerSpeed *= 2;
+        }
+
+        NavAgent_Player.velocity = forward * Mathf.Max(vertical, 0) * playerSpeed;
+
+        //Animator_Player.SetBool("Moving", NavAgent_Player.velocity.sqrMagnitude > 0.1f);
+        //Animator_Player.SetBool("Dashing", NavAgent_Player.velocity.sqrMagnitude > 9.0f);
+
+        //Animator_Player.SetFloat("Speed", NavAgent_Player.velocity.magnitude);
+
+        CmdSetSpeed(NavAgent_Player.velocity.magnitude);
     }
 
     private void HandleRotation()
@@ -122,6 +138,16 @@ public class PlayerController : NetworkBehaviour
     private void CommandAtk()
     {
         RpcOnAtk();
+    }
+
+    [Command]
+    private void CmdSetSpeed(float speed)
+    {
+        syncSpeed = speed;
+    }
+    private void OnSpeedChanged(float oldSpeed, float newSpeed)
+    {
+        Animator_Player.SetFloat("Speed", newSpeed);
     }
 
     [ClientRpc]
