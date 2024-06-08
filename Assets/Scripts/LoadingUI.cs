@@ -7,7 +7,7 @@ public class LoadingUI : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(EnableMovementAfterDelay(3.0f));
+        StartCoroutine(EnableMovementAfterDelay(1.5f));
     }
 
     private IEnumerator EnableMovementAfterDelay(float delay)

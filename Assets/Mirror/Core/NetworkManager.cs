@@ -420,7 +420,6 @@ namespace Mirror
         /// <summary>Starts the client, connects it to the server with networkAddress.</summary>
         public void StartClient()
         {
-            Debug.Log("client");
             // Do checks and short circuits before setting anything up.
             // If / when we retry, we won't have conflict issues.
             if (NetworkClient.active)
@@ -475,7 +474,6 @@ namespace Mirror
         /// <summary>Starts a network "host" - a server and client in the same application.</summary>
         public void StartHost()
         {
-            Debug.Log("starthost");
             if (NetworkServer.active || NetworkClient.active)
             {
                 Debug.LogWarning("Server or Client already started.");

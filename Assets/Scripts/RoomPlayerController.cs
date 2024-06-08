@@ -7,7 +7,7 @@ using TMPro;
 using System.Collections;
 using UnityEngine.UI;
 
-public class PlayerController : NetworkBehaviour
+public class RoomPlayerController : NetworkBehaviour
 {
     [Header("Components")]
     public NavMeshAgent NavAgent_Player;
@@ -32,7 +32,6 @@ public class PlayerController : NetworkBehaviour
     public KeyCode _attKey = KeyCode.Mouse0;
 
     private bool isMovementEnabled = false;
-    [SerializeField] GameObject LoadingImage;
     [Header("Stats Server")]
     [SyncVar(hook = nameof(OnSpeedChanged))] private float syncSpeed;
 
