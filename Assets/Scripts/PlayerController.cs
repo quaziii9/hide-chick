@@ -4,6 +4,8 @@ using Mirror;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
 using TMPro;
+using System.Collections;
+using UnityEngine.UI;
 
 public class PlayerController : NetworkBehaviour
 {
@@ -29,30 +31,41 @@ public class PlayerController : NetworkBehaviour
     [Header("Attack")]
     public KeyCode _attKey = KeyCode.Mouse0;
 
+    private bool isMovementEnabled = false;
+    [SerializeField] GameObject LoadingImage;
+
     private void Start()
     {
         cc = GetComponent<CharacterController>();
-        
-        Debug.Log(Database.Instance.PlayerNickName + " : " + isLocalPlayer);
-        SetCameraPosition();
 
         if (!isLocalPlayer)
         {
-            Debug.Log("camera false");
             cameraObject.SetActive(false);
         }
         else
-        {
-            Debug.Log("camera true");
+        { 
             cameraObject.SetActive(true);
+            StartCoroutine(EnableMovementAfterDelay(3.0f));
         }
+    }
+
+    private IEnumerator EnableMovementAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        isMovementEnabled = true;
+    }
 
 
+
+    private void InitializeLocalPlayer()
+    {
+        cameraObject.SetActive(true);
+        SetCameraPositionImmediate();
     }
 
     private void Update()
     {
-        if (!Application.isFocused || !isLocalPlayer)
+        if (!Application.isFocused || !isLocalPlayer || !isMovementEnabled)
         {
             return;
         }
@@ -117,12 +130,10 @@ public class PlayerController : NetworkBehaviour
         Animator_Player.SetTrigger("Atk");
     }
 
-    private void SetCameraPosition()
+    private void SetCameraPositionImmediate()
     {
         cameraPos.transform.position = this.transform.position + new Vector3(0, 0, 0);
-
-        Vector3 camAngle = cameraPos.transform.rotation.eulerAngles;
-        Debug.Log("setcamera");
+        cameraPos.transform.rotation = Quaternion.Euler(0, 0, 0); // 초기 회전 설정
     }
 
     private void UpdateCameraPosition()

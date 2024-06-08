@@ -1967,6 +1967,7 @@ MonoBehaviour:
   cameraPos: {fileID: 6048319789278978254}
   PlayerCamera: {fileID: 2165151841460487053}
   _attKey: 323
+  LoadingImage: {fileID: 7315240883275939773, guid: 7f8badcebe4bba34898c15b2a2acd359, type: 3}
 --- !u!114 &6718710586412428308
 MonoBehaviour:
   m_ObjectHideFlags: 0

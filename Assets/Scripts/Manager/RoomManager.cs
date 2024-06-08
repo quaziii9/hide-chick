@@ -12,6 +12,7 @@ public class RoomManager : NetworkRoomManager
     public void OnInputValueChanged_SetHostName(string hostName)
     {
         this.networkAddress = hostName;
+
     }
 
     public override void OnClientDisconnect()
