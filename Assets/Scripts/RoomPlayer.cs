@@ -9,6 +9,29 @@ public class RoomPlayer : NetworkRoomPlayer
 
     public TextMeshProUGUI NickName;
 
+    private void Start()
+    {
+        base.Start();
+        SetPlayerNameText();
+
+        LobbyUIManager.Instance.GameRoomPlayerCounter.UpdatePlayerCount();
+
+        if (isServer)
+        {
+            LobbyUIManager.Instance.ActiveStartButton();
+        }
+
+
+    }
+
+    private void OnDestroy()
+    {
+        if (LobbyUIManager.Instance != null)
+        {
+            LobbyUIManager.Instance.GameRoomPlayerCounter.UpdatePlayerCount();
+        }
+    }
+
     public override void OnStartLocalPlayer()
     {
         // 로컬 플레이어가 시작될 때 서버에 자신의 닉네임을 보냅니다.
@@ -44,15 +67,4 @@ public class RoomPlayer : NetworkRoomPlayer
         Debug.Log($"SetPlayerNameText: NickName text set to {PlayerName}");
     }
 
-    private void Start()
-    {
-        // 닉네임 텍스트 업데이트
-        SetPlayerNameText();
-        Debug.Log("Start: Setting PlayerName text");
-    }
-
-    private void OnDestroy()
-    {
-        // 필요에 따라 추가 코드 작성
-    }
 }
