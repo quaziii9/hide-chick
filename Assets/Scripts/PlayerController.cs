@@ -31,6 +31,8 @@ public class PlayerController : NetworkBehaviour
     private void Start()
     {
         cc = GetComponent<CharacterController>();
+        
+        Debug.Log(Database.Instance.PlayerNickName + " : " + isLocalPlayer);
 
         if (!isLocalPlayer)
         {
@@ -40,6 +42,9 @@ public class PlayerController : NetworkBehaviour
         {
             cameraObject.SetActive(true);
         }
+
+        SetCameraPosition();
+
     }
 
     private void Update()
@@ -72,24 +77,11 @@ public class PlayerController : NetworkBehaviour
 //    [ClientRpc]
     private void HandleMovement()
     {
-        // 로컬플레이어의 회전
-        //float horizontal = Input.GetAxis("Horizontal");
-        //transform.Rotate(0, horizontal * 100f * Time.deltaTime, 0);
-
         // 로컬 플레이어의 이동
         float vertical = Input.GetAxis("Vertical");
         Vector3 forward = transform.TransformDirection(Vector3.forward);
 
         NavAgent_Player.velocity = forward * Mathf.Max(vertical, 0) * NavAgent_Player.speed;
-
-        //Animator_Player.SetFloat("XSpeed", moveVector.x);
-        ////animator.SetFloat("ZSpeed", moveVector.y);
-
-        //moveVector = Vector2.Lerp(moveVector, moveVectorTarget * moveSpeed, Time.deltaTime * 5);
-
-        //Vector3 moveVector3 = new Vector3(moveVector.x * 0.5f, Physics.gravity.y, moveVector.y);
-
-        //cc.Move(this.transform.rotation * moveVector3 * Time.deltaTime);
     }
 
     private void HandleRotation()
@@ -120,6 +112,13 @@ public class PlayerController : NetworkBehaviour
     private void RpcOnAtk()
     {
         Animator_Player.SetTrigger("Atk");
+    }
+
+    private void SetCameraPosition()
+    {
+        cameraPos.transform.position = this.transform.position + new Vector3(0, 0, 0);
+
+        Vector3 camAngle = cameraPos.transform.rotation.eulerAngles;
     }
 
     private void UpdateCameraPosition()

@@ -22,7 +22,8 @@ public class LobbyUIManager : MonoBehaviour
 
     public void ActiveStartButton()
     {
-        startButton.gameObject.SetActive(true);
+        //var players = FindObjectsOfType<RoomPlayer>();
+            startButton.gameObject.SetActive(true);
     }
 
     public void SetInteractableStartButton(bool interactable)
