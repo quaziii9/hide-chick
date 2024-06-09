@@ -6,6 +6,7 @@ using Mirror;
 public class RoomManager : NetworkRoomManager
 {
     [SerializeField] LoginPopup _loginPopup;
+    [SerializeField] GameObject aiPrefab; // AI 프리팹
     public int maxPlayerCount = 20;
     public int minPlayerCount = 1;
 
@@ -64,6 +65,13 @@ public class RoomManager : NetworkRoomManager
     public override void OnServerSceneChanged(string sceneName)
     {
         base.OnServerSceneChanged(sceneName);
+
+        if (sceneName != RoomScene)
+        {
+            // 씬이 로비 씬이 아닐 때 AI 스폰
+            SpawnAIs();
+        }
+
         foreach (NetworkConnection conn in NetworkServer.connections.Values)
         {
             if (conn.identity != null)
@@ -71,6 +79,51 @@ public class RoomManager : NetworkRoomManager
                 Vector3 spawnPos = FindObjectOfType<SpawnPositions>().GetSpawnPosition();
                 conn.identity.transform.position = spawnPos;
             }
+            else
+            {
+                return;
+            }
         }
+       
+    }
+
+    private void SpawnAIs()
+    {
+        // 현재 연결된 실제 플레이어 수
+        int playerCount = NetworkServer.connections.Count;
+
+        // 생성해야 할 AI 캐릭터 수
+        int aiCount = maxPlayerCount - playerCount;
+
+        // AI 캐릭터 생성
+        for (int i = 0; i < aiCount; i++)
+        {
+            Vector3 spawnPos = GetStartPosition().position;
+            Quaternion randomRotation = Quaternion.Euler(0, Random.Range(0f, 360f), 0); // Y축 회전을 랜덤하게 설정
+            GameObject aiInstance = Instantiate(aiPrefab, spawnPos, randomRotation);
+            NetworkServer.Spawn(aiInstance);
+        }
+    }
+
+    public override Transform GetStartPosition()
+    {
+        // NetworkStartPosition 사용하여 스폰 위치 반환
+        if (startPositions.Count == 0)
+        {
+            foreach (var startPos in FindObjectsOfType<NetworkStartPosition>())
+            {
+                startPositions.Add(startPos.transform);
+            }
+        }
+
+        if (startPositions.Count > 0)
+        {
+            Transform startPos = startPositions[0];
+            startPositions.RemoveAt(0);
+            return startPos;
+        }
+
+        // 기본 위치 반환 (네트워크 시작 위치가 없을 경우)
+        return base.GetStartPosition();
     }
 }

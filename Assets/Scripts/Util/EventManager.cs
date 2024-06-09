@@ -80,7 +80,7 @@ namespace EventLibrary
             {
                 thisEvent = new TEvent();
                 eventDictionary.Add(eventName, thisEvent);
-                Debug.Log($"Event created: {eventName}");
+               // Debug.Log($"Event created: {eventName}");
             }
             return thisEvent as TEvent;
         }
@@ -91,7 +91,7 @@ namespace EventLibrary
             if (thisEvent.GetPersistentEventCount() == 0)
             {
                 eventDictionary.Remove(eventName);
-                Debug.Log($"Event removed: {eventName}");
+              //  Debug.Log($"Event removed: {eventName}");
             }
         }
 
@@ -102,7 +102,7 @@ namespace EventLibrary
             {
                 GenericEvent<T> genericEvent = GetOrCreateEvent<GenericEvent<T>>(eventName);
                 genericEvent.AddListener(listener);
-                Debug.Log($"Listener added to event: {eventName}");
+                //Debug.Log($"Listener added to event: {eventName}");
             }
         }
 
@@ -112,7 +112,7 @@ namespace EventLibrary
             {
                 UnityEvent unityEvent = GetOrCreateEvent<UnityEvent>(eventName);
                 unityEvent.AddListener(listener);
-                Debug.Log($"Listener added to event: {eventName}");
+                //Debug.Log($"Listener added to event: {eventName}");
             }
         }
 
@@ -122,7 +122,7 @@ namespace EventLibrary
             {
                 GenericEvent<T1, T2> genericEvent = GetOrCreateEvent<GenericEvent<T1, T2>>(eventName);
                 genericEvent.AddListener(listener);
-                Debug.Log($"Listener added to event: {eventName}");
+                //Debug.Log($"Listener added to event: {eventName}");
             }
         }
 
@@ -134,7 +134,7 @@ namespace EventLibrary
                 if (eventDictionary.TryGetValue(eventName, out var thisEvent) && thisEvent is GenericEvent<T> genericEvent)
                 {
                     genericEvent.RemoveListener(listener);
-                    Debug.Log($"Listener removed from event: {eventName}");
+                    //Debug.Log($"Listener removed from event: {eventName}");
                     RemoveEventIfEmpty(eventName, genericEvent);
                 }
             }
@@ -147,7 +147,7 @@ namespace EventLibrary
                 if (eventDictionary.TryGetValue(eventName, out var thisEvent) && thisEvent is UnityEvent unityEvent)
                 {
                     unityEvent.RemoveListener(listener);
-                    Debug.Log($"Listener removed from event: {eventName}");
+                    //Debug.Log($"Listener removed from event: {eventName}");
                     RemoveEventIfEmpty(eventName, unityEvent);
                 }
             }
@@ -160,7 +160,7 @@ namespace EventLibrary
                 if (eventDictionary.TryGetValue(eventName, out var thisEvent) && thisEvent is GenericEvent<T1, T2> genericEvent)
                 {
                     genericEvent.RemoveListener(listener);
-                    Debug.Log($"Listener removed from event: {eventName}");
+                    //Debug.Log($"Listener removed from event: {eventName}");
                     RemoveEventIfEmpty(eventName, genericEvent);
                 }
             }
