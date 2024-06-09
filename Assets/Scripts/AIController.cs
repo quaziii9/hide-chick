@@ -1,12 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 using UnityEngine.AI;
 
-public class AIController : MonoBehaviour
+public class AIController : NetworkBehaviour
 {
     public enum AIState { Idle, Walking, Running }
+
+    [SyncVar]
     private AIState currentState;
+
+    [SyncVar]
+    private Vector3 syncDestination;
+
+    [SyncVar]
+    private float syncSpeed;
 
     private NavMeshAgent agent;
     private Animator animator;
@@ -17,19 +26,35 @@ public class AIController : MonoBehaviour
     [SerializeField] private float stateDurationMax = 10f; // 상태 최대 지속 시간
     [SerializeField] private float idleMaxDuration = 3f; // Idle 상태 최대 지속 시간
     [SerializeField] private float positionChangeInterval = 15f; // 위치 변경 간격
-
     [SerializeField] private float movementRadius = 20f; // 이동 반경
 
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
-        ChangeState(GetRandomState()); // 시작 상태를 랜덤으로 설정
-        agent.SetDestination(GetRandomPosition()); // 시작하자마자 새로운 위치 설정
-        positionChangeTimer = positionChangeInterval; // 위치 변경 타이머 초기화
+
+        if (isServer)
+        {
+            ChangeState(GetRandomState()); // 시작 상태를 랜덤으로 설정
+            SetNewDestination(); // 시작하자마자 새로운 위치 설정
+            positionChangeTimer = positionChangeInterval; // 위치 변경 타이머 초기화
+        }
     }
 
     void Update()
+    {
+        if (isServer)
+        {
+            ServerUpdate();
+        }
+        else
+        {
+            ClientUpdate();
+        }
+    }
+
+    [ServerCallback]
+    private void ServerUpdate()
     {
         stateChangeTimer -= Time.deltaTime;
         positionChangeTimer -= Time.deltaTime;
@@ -41,7 +66,7 @@ public class AIController : MonoBehaviour
 
         if (positionChangeTimer <= 0)
         {
-            agent.SetDestination(GetRandomPosition()); // 새로운 위치 설정
+            SetNewDestination();
             positionChangeTimer = positionChangeInterval; // 위치 변경 타이머 리셋
         }
 
@@ -50,32 +75,47 @@ public class AIController : MonoBehaviour
         {
             if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
             {
-                agent.SetDestination(GetRandomPosition());
+                SetNewDestination();
             }
         }
 
         // 상태에 따른 행동 처리
-        switch (currentState)
-        {
-            case AIState.Idle:
-                agent.isStopped = true;
-                animator.SetFloat("Speed", 0);
-                break;
-            case AIState.Walking:
-            case AIState.Running:
-                agent.isStopped = false;
-                HandleMovement();
-                break;
-        }
+        HandleMovement();
+    }
+
+    [ClientCallback]
+    private void ClientUpdate()
+    {
+        agent.destination = syncDestination;
+        agent.speed = syncSpeed;
+        animator.SetFloat("Speed", agent.velocity.magnitude);
     }
 
     private void HandleMovement()
     {
-        float speed = (currentState == AIState.Walking) ? 1.5f : 3f;
-        agent.speed = speed;
-        animator.SetFloat("Speed", agent.velocity.magnitude);
+        switch (currentState)
+        {
+            case AIState.Idle:
+                agent.isStopped = true;
+                syncSpeed = 0f;
+                animator.SetFloat("Speed", 0);
+                break;
+            case AIState.Walking:
+                agent.isStopped = false;
+                syncSpeed = 1.5f;
+                agent.speed = syncSpeed;
+                animator.SetFloat("Speed", agent.velocity.magnitude);
+                break;
+            case AIState.Running:
+                agent.isStopped = false;
+                syncSpeed = 3f;
+                agent.speed = syncSpeed;
+                animator.SetFloat("Speed", agent.velocity.magnitude);
+                break;
+        }
     }
 
+    [Server]
     private void ChangeState(AIState newState)
     {
         currentState = newState;
@@ -85,7 +125,7 @@ public class AIController : MonoBehaviour
     private AIState GetRandomState()
     {
         float randomValue = Random.value * 100; // 0에서 100 사이의 랜덤 값
-        if (randomValue < 10) // 20% 확률로 Idle
+        if (randomValue < 20) // 20% 확률로 Idle
         {
             return AIState.Idle;
         }
@@ -99,6 +139,13 @@ public class AIController : MonoBehaviour
         }
     }
 
+    [Server]
+    private void SetNewDestination()
+    {
+        syncDestination = GetRandomPosition();
+        agent.SetDestination(syncDestination);
+    }
+
     private Vector3 GetRandomPosition()
     {
         Vector3 randomDirection = Random.insideUnitSphere * movementRadius;
@@ -106,5 +153,12 @@ public class AIController : MonoBehaviour
         NavMeshHit hit;
         NavMesh.SamplePosition(randomDirection, out hit, movementRadius, NavMesh.AllAreas);
         return hit.position;
+    }
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+        agent = GetComponent<NavMeshAgent>();
+        animator = GetComponent<Animator>();
     }
 }

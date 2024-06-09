@@ -10,10 +10,11 @@ public class RoomManager : NetworkRoomManager
     public int maxPlayerCount = 20;
     public int minPlayerCount = 1;
 
+    private List<Transform> startPositions = new List<Transform>();
+
     public void OnInputValueChanged_SetHostName(string hostName)
     {
         this.networkAddress = hostName;
-
     }
 
     public override void OnClientDisconnect()
@@ -31,12 +32,11 @@ public class RoomManager : NetworkRoomManager
     {
         base.OnRoomServerConnect(conn);
 
-        // 연결에 이미 플레이어가 할당되어 있지 않은 경우에만 실행
         if (conn.identity == null)
         {
             Vector3 spawnPos = FindObjectOfType<SpawnPositions>().GetSpawnPosition();
             GameObject player = Instantiate(spawnPrefabs[0], spawnPos, Quaternion.identity);
-            NetworkServer.AddPlayerForConnection(conn, player);            
+            NetworkServer.AddPlayerForConnection(conn, player);
         }
         else
         {
@@ -46,7 +46,6 @@ public class RoomManager : NetworkRoomManager
 
     public override void ServerChangeScene(string newSceneName)
     {
-        // 씬 전환 전에 모든 로비 플레이어를 비활성화 또는 제거
         foreach (var conn in NetworkServer.connections.Values)
         {
             if (conn.identity != null)
@@ -79,12 +78,7 @@ public class RoomManager : NetworkRoomManager
                 Vector3 spawnPos = FindObjectOfType<SpawnPositions>().GetSpawnPosition();
                 conn.identity.transform.position = spawnPos;
             }
-            else
-            {
-                return;
-            }
         }
-       
     }
 
     private void SpawnAIs()
@@ -95,19 +89,22 @@ public class RoomManager : NetworkRoomManager
         // 생성해야 할 AI 캐릭터 수
         int aiCount = maxPlayerCount - playerCount;
 
+        Debug.Log($"Spawning {aiCount} AIs");
+
         // AI 캐릭터 생성
         for (int i = 0; i < aiCount; i++)
         {
             Vector3 spawnPos = GetStartPosition().position;
             Quaternion randomRotation = Quaternion.Euler(0, Random.Range(0f, 360f), 0); // Y축 회전을 랜덤하게 설정
             GameObject aiInstance = Instantiate(aiPrefab, spawnPos, randomRotation);
+
             NetworkServer.Spawn(aiInstance);
+            Debug.Log($"Spawned AI at {spawnPos}");
         }
     }
 
     public override Transform GetStartPosition()
     {
-        // NetworkStartPosition 사용하여 스폰 위치 반환
         if (startPositions.Count == 0)
         {
             foreach (var startPos in FindObjectsOfType<NetworkStartPosition>())
@@ -123,7 +120,6 @@ public class RoomManager : NetworkRoomManager
             return startPos;
         }
 
-        // 기본 위치 반환 (네트워크 시작 위치가 없을 경우)
         return base.GetStartPosition();
     }
 }
