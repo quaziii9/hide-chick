@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+using EventLibrary;
+using EnumTypes;
 
 public class RoomManager : NetworkRoomManager
 {
@@ -9,6 +11,11 @@ public class RoomManager : NetworkRoomManager
     [SerializeField] GameObject aiPrefab; // AI 프리팹
     public int maxPlayerCount = 30;
     public int minPlayerCount = 1;
+
+    public int alivePlayerCount = NetworkServer.connections.Count;
+
+    public static RoomManager Instance;
+
 
     private List<Transform> startPositions = new List<Transform>();
 
@@ -64,8 +71,9 @@ public class RoomManager : NetworkRoomManager
     public override void OnServerSceneChanged(string sceneName)
     {
         base.OnServerSceneChanged(sceneName);
-        
-        NetworkClient.Ready();
+
+        NetworkClient.Ready();//
+        alivePlayerCount = NetworkServer.connections.Count;
         if (sceneName != RoomScene)
         {
             // 씬이 로비 씬이 아닐 때 AI 스폰
@@ -122,5 +130,29 @@ public class RoomManager : NetworkRoomManager
         }
 
         return base.GetStartPosition();
+    }
+
+
+    public void PlayerKill(PlayerController player)
+    {
+        Debug.Log("playerdied");
+        alivePlayerCount--;
+        CheckForWinner(player);
+    }
+
+    private void CheckForWinner(PlayerController player)
+    {
+        Debug.Log("Check");
+        if (alivePlayerCount == 1)
+        {
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.RpcDeclareWinner(player.connectionToClient);
+            }
+            else
+            {
+                Debug.LogError("GameManager instance is null!");
+            }
+        }
     }
 }

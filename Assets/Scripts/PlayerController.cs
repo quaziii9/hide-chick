@@ -11,6 +11,8 @@ using EventLibrary;
 
 public class PlayerController : NetworkBehaviour
 {
+    [SyncVar] public bool isAlive = true;
+
     [Header("Components")]
     public NavMeshAgent NavAgent_Player;
     private Animator Animator_Player;
@@ -72,22 +74,9 @@ public class PlayerController : NetworkBehaviour
         HandleRotation();
         HandleMovement();
 
-        Test();
     }
 
-    void Test()
-    {
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            cmdtest();
-        }
-    }
 
-    [Command]
-    void cmdtest()
-    {
-        Debug.Log("CMD");
-    }
 
     private void LateUpdate()
     {
@@ -137,6 +126,7 @@ public class PlayerController : NetworkBehaviour
 
     public void Die()
     {
+        isAlive = false;
         Animator_Player.SetTrigger("Die");
         playerCollider.enabled = false;
         isMovementEnabled = false;
@@ -145,7 +135,11 @@ public class PlayerController : NetworkBehaviour
         isAtk = false;
 
         EventManager<UIEvents>.TriggerEvent(UIEvents.atkImageSetActiveFalse);
+        //EventManager<UIEvents>.TriggerEvent(UIEvents.BackGroundUION);
         StartCoroutine(DisableAfterDelay(2f));
+
+        EventManager<GameEvents>.TriggerEvent(GameEvents.playerDie);
+
     }
 
     private IEnumerator DisableAfterDelay(float delay)

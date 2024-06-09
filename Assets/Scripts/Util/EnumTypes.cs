@@ -24,7 +24,14 @@ namespace EnumTypes
     {
         atkTime,
         addKillLog,
-        atkImageSetActiveFalse
+        atkImageSetActiveFalse,
+        BackGroundUION,
+        WinnerUION,
+    }
+
+    public enum GameEvents
+    {
+        playerDie,
     }
 
 

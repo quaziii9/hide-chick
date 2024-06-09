@@ -16,8 +16,10 @@ public class WeaponCollider : NetworkBehaviour
             {
                 CmdSendKillLog(attackingPlayer.PlayerName, attackedPlayer.PlayerName);
                 EventManager<PlayerEvents>.TriggerEvent(PlayerEvents.WeaponColliderFalse);
+                var attackingPlayerController = GetComponentInParent<PlayerController>();
                 var attackedPlayerController = other.GetComponentInParent<PlayerController>();
                 attackedPlayerController.Die();
+                //RoomManager.Instance.PlayerKill(attackedPlayerController);
             }
 
             var attackedAI = other.GetComponentInParent<AIController>();
@@ -33,15 +35,12 @@ public class WeaponCollider : NetworkBehaviour
     [Command]
     private void CmdSendKillLog(string attacker, string victim)
     {
-        Debug.Log("COMMAND");
         RpcSendKillLog(attacker, victim);
     }
 
     [ClientRpc]
     private void RpcSendKillLog(string attacker, string victim)
     {
-        Debug.Log("CLIENTRPC");
-
         EventManager<UIEvents>.TriggerEvent(UIEvents.addKillLog, attacker, victim);
     }
 }
