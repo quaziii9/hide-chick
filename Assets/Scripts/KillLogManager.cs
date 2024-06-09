@@ -70,25 +70,4 @@ public class KillLogManager : MonoBehaviour
         // 부모 컨테이너의 크기를 재조정
         LayoutRebuilder.ForceRebuildLayoutImmediate(killLogContainer.GetComponent<RectTransform>());
     }
-
-    //임의의 킬로그를 5초마다 추가하는 코루틴
-    //private IEnumerator AddRandomKillLogEveryFiveSeconds()
-    //{
-    //    string[] playerNames = { "PlayerOne", "PlayerTwo", "PlayerThree", "PlayerFour", "PlayerFive" };
-
-    //    while (true)
-    //    {
-    //        yield return new WaitForSeconds(1);
-
-    //        // 임의의 플레이어 이름 선택
-    //        string killer = playerNames[Random.Range(0, playerNames.Length)];
-    //        string killed = playerNames[Random.Range(0, playerNames.Length)];
-
-    //        // 임의의 색상 선택 (예: 빨간색)
-    //        Color randomColor = new Color(Random.value, Random.value, Random.value);
-
-    //        // 킬로그 추가
-    //        AddKillLog(killer, killed);
-    //    }
-    //}
 }

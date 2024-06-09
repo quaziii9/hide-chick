@@ -2828,7 +2828,7 @@ MonoBehaviour:
   clientIndex: 0
   _loginPopup: {fileID: 2046363864}
   aiPrefab: {fileID: 2513575521597329092, guid: 051869889fb33d747ad4d72dab517038, type: 3}
-  maxPlayerCount: 20
+  maxPlayerCount: 30
   minPlayerCount: 1
 --- !u!1 &1456616095
 GameObject:

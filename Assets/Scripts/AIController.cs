@@ -129,7 +129,7 @@ public class AIController : NetworkBehaviour
         {
             return AIState.Idle;
         }
-        else if (randomValue < 60) // 40% 확률로 Walking
+        else if (randomValue < 70) // 40% 확률로 Walking
         {
             return AIState.Walking;
         }
@@ -160,5 +160,52 @@ public class AIController : NetworkBehaviour
         base.OnStartClient();
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
+    }
+
+
+    public void Die()
+    {
+        animator.SetTrigger("Die");
+        agent.isStopped = true;
+        agent.velocity = Vector3.zero;
+        GetComponent<Collider>().enabled = false;
+
+        StartCoroutine(DisableAfterDelay(2f));
+        //    if (isServer)
+        //    {
+        //        RpcDie();
+        //    }
+        //    else
+        //    {
+        //        CmdDie();
+        //    }
+     }
+
+    //[Command]
+    //private void CmdDie()
+    //{
+    //    RpcDie();
+    //}
+
+    //[ClientRpc]
+    //private void RpcDie()
+    //{
+    //    Debug.Log("rpcdie");
+    //    animator.SetTrigger("Die");
+    //    agent.isStopped = true;
+    //    GetComponent<Collider>().enabled = false;
+
+    //    StartCoroutine(DisableAfterDelay(2f));
+    //}
+
+    private IEnumerator DisableAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        // 하위 오브젝트들을 비활성화
+        foreach (Transform child in transform)
+        {
+            child.gameObject.SetActive(false);
+        }
     }
 }

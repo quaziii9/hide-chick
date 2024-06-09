@@ -7,7 +7,7 @@ public class RoomManager : NetworkRoomManager
 {
     [SerializeField] LoginPopup _loginPopup;
     [SerializeField] GameObject aiPrefab; // AI 프리팹
-    public int maxPlayerCount = 20;
+    public int maxPlayerCount = 30;
     public int minPlayerCount = 1;
 
     private List<Transform> startPositions = new List<Transform>();
@@ -99,7 +99,7 @@ public class RoomManager : NetworkRoomManager
             GameObject aiInstance = Instantiate(aiPrefab, spawnPos, randomRotation);
 
             NetworkServer.Spawn(aiInstance);
-            Debug.Log($"Spawned AI at {spawnPos}");
+            //Debug.Log($"Spawned AI at {spawnPos}");
         }
     }
 
