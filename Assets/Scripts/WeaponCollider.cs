@@ -1,5 +1,7 @@
 using UnityEngine;
 using Mirror;
+using EnumTypes;
+using EventLibrary;
 
 public class WeaponCollider : MonoBehaviour
 {
@@ -12,6 +14,8 @@ public class WeaponCollider : MonoBehaviour
 
             if (attackedPlayer != null && attackingPlayer != null)
             {
+                EventManager<UIEvents>.TriggerEvent(UIEvents.addKillLog, attackingPlayer.PlayerName, attackedPlayer.PlayerName);
+
                 Debug.Log($"{attackingPlayer.PlayerName} attacked {attackedPlayer.PlayerName}");
 
                 // attackedPlayer 죽이기 로직 추가

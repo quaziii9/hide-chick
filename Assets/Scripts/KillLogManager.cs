@@ -14,16 +14,6 @@ public class KillLogManager : MonoBehaviour
 
     private Queue<GameObject> killLogItems = new Queue<GameObject>(); // 킬로그 아이템들을 관리하기 위한 큐
 
-    void Start()
-    {
-        InvokeRepeating(nameof(TestTriggerEvent), 5f, 5f);
-    }
-
-    void TestTriggerEvent()
-    {
-        EventManager<UIEvents>.TriggerEvent(UIEvents.addKillLog, "PlayerOne", "PlayerTwo");
-    }
-
     private void OnEnable()
     {
         EventManager<UIEvents>.StartListening<string, string>(UIEvents.addKillLog, AddKillLog);
