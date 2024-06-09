@@ -15,7 +15,8 @@ public class PlayerController : NetworkBehaviour
     public NavMeshAgent NavAgent_Player;
     private Animator Animator_Player;
     public Transform Transform_Player;
-    public GameObject weapon; 
+    public GameObject weapon;
+    private Collider playerCollider;
 
     [Header("Camera")]
     [SerializeField] private GameObject cameraObject;
@@ -34,6 +35,7 @@ public class PlayerController : NetworkBehaviour
     private void Start()
     {
         Animator_Player = GetComponent<Animator>();
+        playerCollider = GetComponent<Collider>();
 
         if (!isLocalPlayer)
         {
@@ -116,6 +118,32 @@ public class PlayerController : NetworkBehaviour
             EventManager<UIEvents>.TriggerEvent(UIEvents.atkTime);            
         }
     }
+
+    public void Die()
+    {
+        Animator_Player.SetTrigger("Die");
+        playerCollider.enabled = false;
+        isMovementEnabled = false;
+        NavAgent_Player.isStopped = true;
+        NavAgent_Player.velocity = Vector3.zero;
+        isAtk = false;
+
+        EventManager<UIEvents>.TriggerEvent(UIEvents.atkImageSetActiveFalse);
+        StartCoroutine(DisableAfterDelay(2f));
+    }
+
+    private IEnumerator DisableAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        // 하위 오브젝트들을 비활성화
+        foreach (Transform child in transform)
+        {
+            child.gameObject.SetActive(false);
+        }
+        isMovementEnabled = true;
+    }
+
 
     public void WeaponColliderTrue()
     {

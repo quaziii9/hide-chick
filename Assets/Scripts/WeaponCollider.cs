@@ -19,9 +19,8 @@ public class WeaponCollider : MonoBehaviour
                 Debug.Log($"{attackingPlayer.PlayerName} attacked {attackedPlayer.PlayerName}");
 
                 EventManager<PlayerEvents>.TriggerEvent(PlayerEvents.WeaponColliderFalse);
-
-                // attackedPlayer 죽이기 로직 추가
-                //attackedPlayer.Die();
+                var attackedPlayerController = other.GetComponent<PlayerController>();
+                attackedPlayerController.Die();
             }
         }
     }

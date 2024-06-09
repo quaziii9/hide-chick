@@ -23,7 +23,8 @@ namespace EnumTypes
     public enum UIEvents
     {
         atkTime,
-        addKillLog
+        addKillLog,
+        atkImageSetActiveFalse
     }
 
 

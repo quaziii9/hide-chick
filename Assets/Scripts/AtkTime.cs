@@ -7,6 +7,7 @@ using EnumTypes;
 
 public class AtkTime : MonoBehaviour
 {
+    public GameObject atkObjc;
     public GameObject hideObj;
     public Image hideImage;
     private bool isHide;
@@ -21,6 +22,7 @@ public class AtkTime : MonoBehaviour
     private void OnEnable()
     {
         EventManager<UIEvents>.StartListening(UIEvents.atkTime,HideSkillSetting);
+        EventManager<UIEvents>.StartListening(UIEvents.atkImageSetActiveFalse, AtkImageSetActiveFalse);
     }
 
 
@@ -34,9 +36,20 @@ public class AtkTime : MonoBehaviour
 
     public void HideSkillSetting()
     {
+        AtkImageSetActiveTrue();
         hideObj.SetActive(true);
         getatkTime = atkTime;
         isHide = true;
+    }
+
+    public void AtkImageSetActiveTrue()
+    {
+        atkObjc.SetActive(true);
+    }
+
+    public void AtkImageSetActiveFalse()
+    {
+        atkObjc.SetActive(false);
     }
 
     IEnumerator atkTimeChk()
@@ -53,6 +66,7 @@ public class AtkTime : MonoBehaviour
                 EventManager<PlayerEvents>.TriggerEvent(PlayerEvents.isAtkTrue);
 
                 isHide = false;
+                AtkImageSetActiveFalse();
                 hideObj.SetActive(false);
             }
 
