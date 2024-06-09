@@ -30,7 +30,9 @@ namespace EnumTypes
     public enum PlayerEvents
     {
         isAtkTrue,
-        isAtkFalse
+        isAtkFalse,
+        WeaponColliderTrue,
+        WeaponColliderFalse,
     }
 
     public enum SceneType

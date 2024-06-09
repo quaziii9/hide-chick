@@ -50,6 +50,7 @@ public class PlayerController : NetworkBehaviour
     {
         EventManager<PlayerEvents>.StartListening(PlayerEvents.isAtkTrue, isAtkTrue);
         EventManager<PlayerEvents>.StartListening(PlayerEvents.isAtkFalse, isAtkFalse);
+        EventManager<PlayerEvents>.StartListening(PlayerEvents.WeaponColliderFalse, WeaponColliderFalse);
     }
 
     private IEnumerator EnableMovementAfterDelay(float delay)
