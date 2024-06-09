@@ -3,7 +3,7 @@ using Mirror;
 using EnumTypes;
 using EventLibrary;
 
-public class WeaponCollider : MonoBehaviour
+public class WeaponCollider : NetworkBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
@@ -14,20 +14,34 @@ public class WeaponCollider : MonoBehaviour
 
             if (attackedPlayer != null && attackingPlayer != null)
             {
-                EventManager<UIEvents>.TriggerEvent(UIEvents.addKillLog, attackingPlayer.PlayerName, attackedPlayer.PlayerName);
-                Debug.Log($"{attackingPlayer.PlayerName} attacked {attackedPlayer.PlayerName}");
+                CmdSendKillLog(attackingPlayer.PlayerName, attackedPlayer.PlayerName);
                 EventManager<PlayerEvents>.TriggerEvent(PlayerEvents.WeaponColliderFalse);
-                var attackedPlayerController = other.GetComponent<PlayerController>();
+                var attackedPlayerController = other.GetComponentInParent<PlayerController>();
                 attackedPlayerController.Die();
             }
 
-            var attackedAI = other.GetComponent<AIController>();
+            var attackedAI = other.GetComponentInParent<AIController>();
             if (attackedAI != null)
             {
-                EventManager<UIEvents>.TriggerEvent(UIEvents.addKillLog, attackingPlayer.PlayerName, "AI");
-                Debug.Log("AI attacked and dying.");
+                CmdSendKillLog(attackingPlayer.PlayerName, "AI");
+                EventManager<PlayerEvents>.TriggerEvent(PlayerEvents.WeaponColliderFalse);
                 attackedAI.Die();
             }
         }
+    }
+
+    [Command]
+    private void CmdSendKillLog(string attacker, string victim)
+    {
+        Debug.Log("COMMAND");
+        RpcSendKillLog(attacker, victim);
+    }
+
+    [ClientRpc]
+    private void RpcSendKillLog(string attacker, string victim)
+    {
+        Debug.Log("CLIENTRPC");
+
+        EventManager<UIEvents>.TriggerEvent(UIEvents.addKillLog, attacker, victim);
     }
 }

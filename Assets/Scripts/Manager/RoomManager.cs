@@ -64,7 +64,8 @@ public class RoomManager : NetworkRoomManager
     public override void OnServerSceneChanged(string sceneName)
     {
         base.OnServerSceneChanged(sceneName);
-
+        
+        NetworkClient.Ready();
         if (sceneName != RoomScene)
         {
             // 씬이 로비 씬이 아닐 때 AI 스폰

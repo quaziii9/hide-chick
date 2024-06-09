@@ -171,32 +171,7 @@ public class AIController : NetworkBehaviour
         GetComponent<Collider>().enabled = false;
 
         StartCoroutine(DisableAfterDelay(2f));
-        //    if (isServer)
-        //    {
-        //        RpcDie();
-        //    }
-        //    else
-        //    {
-        //        CmdDie();
-        //    }
      }
-
-    //[Command]
-    //private void CmdDie()
-    //{
-    //    RpcDie();
-    //}
-
-    //[ClientRpc]
-    //private void RpcDie()
-    //{
-    //    Debug.Log("rpcdie");
-    //    animator.SetTrigger("Die");
-    //    agent.isStopped = true;
-    //    GetComponent<Collider>().enabled = false;
-
-    //    StartCoroutine(DisableAfterDelay(2f));
-    //}
 
     private IEnumerator DisableAfterDelay(float delay)
     {

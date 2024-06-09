@@ -18,6 +18,7 @@ public class KillLogManager : MonoBehaviour
     {
         EventManager<UIEvents>.StartListening<string, string>(UIEvents.addKillLog, AddKillLog);
     }
+
     // 새 킬로그를 추가하는 함수
     public void AddKillLog(string killer, string killed)
     {

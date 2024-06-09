@@ -71,6 +71,22 @@ public class PlayerController : NetworkBehaviour
         HandleAttack();
         HandleRotation();
         HandleMovement();
+
+        Test();
+    }
+
+    void Test()
+    {
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            cmdtest();
+        }
+    }
+
+    [Command]
+    void cmdtest()
+    {
+        Debug.Log("CMD");
     }
 
     private void LateUpdate()
