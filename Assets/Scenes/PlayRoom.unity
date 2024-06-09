@@ -1834,8 +1834,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   killLogContainer: {fileID: 1722310087}
   killLogItemPrefab: {fileID: 6153060902137448914, guid: 7a7b3e7ce35331c4b9c325589d9b32e4, type: 3}
-  maxKillLogs: 5
-  defaultIcon: {fileID: 21300000, guid: 5b37a2f11ffaa9342b78ac75cb07dc03, type: 3}
+  maxKillLogs: 4
 --- !u!114 &1722310090
 MonoBehaviour:
   m_ObjectHideFlags: 0
