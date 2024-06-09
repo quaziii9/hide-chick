@@ -9,6 +9,9 @@ namespace EventLibrary
     [Serializable]
     public class GenericEvent<T> : UnityEvent<T> { }
 
+    [Serializable]
+    public class GenericEvent<T1, T2> : UnityEvent<T1, T2> { }
+
     public class EventManager<E> where E : Enum
     {
         // 이벤트 이름과 해당 UnityEvent를 저장하는 딕셔너리
@@ -28,6 +31,12 @@ namespace EventLibrary
             AddListener(eventName, listener);
         }
 
+        // 두 개의 제네릭 매개변수를 갖는 UnityAction 리스너를 추가하는 메서드
+        public static void StartListening<T1, T2>(E eventName, UnityAction<T1, T2> listener)
+        {
+            AddListener(eventName, listener);
+        }
+
         // 매개변수가 없는 UnityAction 리스너를 제거하는 메서드
         public static void StopListening(E eventName, UnityAction listener)
         {
@@ -36,6 +45,12 @@ namespace EventLibrary
 
         // 제네릭 매개변수를 갖는 UnityAction 리스너를 제거하는 메서드
         public static void StopListening<T>(E eventName, UnityAction<T> listener)
+        {
+            RemoveListener(eventName, listener);
+        }
+
+        // 두 개의 제네릭 매개변수를 갖는 UnityAction 리스너를 제거하는 메서드
+        public static void StopListening<T1, T2>(E eventName, UnityAction<T1, T2> listener)
         {
             RemoveListener(eventName, listener);
         }
@@ -50,6 +65,12 @@ namespace EventLibrary
         public static void TriggerEvent<T>(E eventName, T parameter)
         {
             InvokeEvent(eventName, parameter);
+        }
+
+        // 두 개의 제네릭 매개변수를 갖는 이벤트를 트리거하는 메서드
+        public static void TriggerEvent<T1, T2>(E eventName, T1 parameter1, T2 parameter2)
+        {
+            InvokeEvent(eventName, parameter1, parameter2);
         }
 
         // 이벤트가 존재하지 않으면 생성하여 반환하는 메서드
@@ -95,6 +116,16 @@ namespace EventLibrary
             }
         }
 
+        private static void AddListener<T1, T2>(E eventName, UnityAction<T1, T2> listener)
+        {
+            lock (lockObj)
+            {
+                GenericEvent<T1, T2> genericEvent = GetOrCreateEvent<GenericEvent<T1, T2>>(eventName);
+                genericEvent.AddListener(listener);
+                Debug.Log($"Listener added to event: {eventName}");
+            }
+        }
+
         // 리스너를 제거하는 메서드
         private static void RemoveListener<T>(E eventName, UnityAction<T> listener)
         {
@@ -122,6 +153,19 @@ namespace EventLibrary
             }
         }
 
+        private static void RemoveListener<T1, T2>(E eventName, UnityAction<T1, T2> listener)
+        {
+            lock (lockObj)
+            {
+                if (eventDictionary.TryGetValue(eventName, out var thisEvent) && thisEvent is GenericEvent<T1, T2> genericEvent)
+                {
+                    genericEvent.RemoveListener(listener);
+                    Debug.Log($"Listener removed from event: {eventName}");
+                    RemoveEventIfEmpty(eventName, genericEvent);
+                }
+            }
+        }
+
         // 이벤트를 트리거하는 메서드
         private static void InvokeEvent<T>(E eventName, T parameter)
         {
@@ -132,7 +176,7 @@ namespace EventLibrary
                     if (eventDictionary.TryGetValue(eventName, out var thisEvent) && thisEvent is GenericEvent<T> genericEvent)
                     {
                         genericEvent.Invoke(parameter);
-                       // Debug.Log($"Event triggered: {eventName} with parameter: {parameter}");
+                        // Debug.Log($"Event triggered: {eventName} with parameter: {parameter}");
                     }
                 }
                 catch (Exception e)
@@ -151,12 +195,31 @@ namespace EventLibrary
                     if (eventDictionary.TryGetValue(eventName, out var thisEvent) && thisEvent is UnityEvent unityEvent)
                     {
                         unityEvent.Invoke();
-                       // Debug.Log($"Event triggered: {eventName}");
+                        // Debug.Log($"Event triggered: {eventName}");
                     }
                 }
                 catch (Exception e)
                 {
-                   // Debug.LogError($"Error triggering event {eventName}: {e.Message}");
+                    // Debug.LogError($"Error triggering event {eventName}: {e.Message}");
+                }
+            }
+        }
+
+        private static void InvokeEvent<T1, T2>(E eventName, T1 parameter1, T2 parameter2)
+        {
+            lock (lockObj)
+            {
+                try
+                {
+                    if (eventDictionary.TryGetValue(eventName, out var thisEvent) && thisEvent is GenericEvent<T1, T2> genericEvent)
+                    {
+                        genericEvent.Invoke(parameter1, parameter2);
+                        //Debug.Log($"Event triggered: {eventName} with parameters: {parameter1}, {parameter2}");
+                    }
+                }
+                catch (Exception e)
+                {
+                    //Debug.LogError($"Error triggering event {eventName} with parameters {parameter1}, {parameter2}: {e.Message}");
                 }
             }
         }

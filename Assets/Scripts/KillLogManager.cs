@@ -3,6 +3,8 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections;
 using System.Collections.Generic;
+using EventLibrary;
+using EnumTypes;
 
 public class KillLogManager : MonoBehaviour
 {
@@ -14,10 +16,18 @@ public class KillLogManager : MonoBehaviour
 
     void Start()
     {
-        //5초마다 임의의 킬로그를 추가하는 코루틴 시작
-         //StartCoroutine(AddRandomKillLogEveryFiveSeconds());
+        InvokeRepeating(nameof(TestTriggerEvent), 5f, 5f);
     }
 
+    void TestTriggerEvent()
+    {
+        EventManager<UIEvents>.TriggerEvent(UIEvents.addKillLog, "PlayerOne", "PlayerTwo");
+    }
+
+    private void OnEnable()
+    {
+        EventManager<UIEvents>.StartListening<string, string>(UIEvents.addKillLog, AddKillLog);
+    }
     // 새 킬로그를 추가하는 함수
     public void AddKillLog(string killer, string killed)
     {
