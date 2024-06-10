@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.4366756, g: 0.48427194, b: 0.5645252, a: 1}
+  m_IndirectSpecularColor: {r: 0.43667555, g: 0.48427176, b: 0.56452405, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1059,7 +1059,7 @@ MonoBehaviour:
   Input_Id: {fileID: 1695415785}
   Input_Password: {fileID: 476274131}
   Text_Log: {fileID: 159182409}
-  _ip: 52.78.216.116
+  _ip: 43.202.56.242
   _dbName: login
   _uid: root
   _pwd: 1234
@@ -2830,6 +2830,7 @@ MonoBehaviour:
   aiPrefab: {fileID: 2513575521597329092, guid: 051869889fb33d747ad4d72dab517038, type: 3}
   maxPlayerCount: 30
   minPlayerCount: 1
+  alivePlayerCount: 0
 --- !u!1 &1456616095
 GameObject:
   m_ObjectHideFlags: 0
