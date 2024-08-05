@@ -25,9 +25,9 @@ public class WeaponCollider : NetworkBehaviour
             var attackedAI = other.GetComponentInParent<AIController>();
             if (attackedAI != null)
             {
-                CmdSendKillLog(attackingPlayer.PlayerName, "AI");
+                CmdSendKillLog(attackingPlayer.PlayerName, "AI", attackedAI);
                 EventManager<PlayerEvents>.TriggerEvent(PlayerEvents.WeaponColliderFalse);
-                attackedAI.Die();
+                //attackedAI.Die();
             }
         }
     }
@@ -42,5 +42,18 @@ public class WeaponCollider : NetworkBehaviour
     private void RpcSendKillLog(string attacker, string victim)
     {
         EventManager<UIEvents>.TriggerEvent(UIEvents.addKillLog, attacker, victim);
+    }
+
+    [Command]
+    private void CmdSendKillLog(string attacker, string victim, AIController attackedAI)
+    {
+        RpcSendKillLog(attacker, victim, attackedAI);
+    }
+
+    [ClientRpc]
+    private void RpcSendKillLog(string attacker, string victim, AIController attackedAI)
+    {
+        EventManager<UIEvents>.TriggerEvent(UIEvents.addKillLog, attacker, victim);
+        attackedAI.Die();
     }
 }

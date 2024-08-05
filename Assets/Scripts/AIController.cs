@@ -6,7 +6,7 @@ using UnityEngine.AI;
 
 public class AIController : NetworkBehaviour
 {
-    public enum AIState { Idle, Walking, Running }
+    public enum AIState { Idle, Walking, Running, Dead } // Dead 상태 추가
 
     [SyncVar]
     private AIState currentState;
@@ -56,6 +56,8 @@ public class AIController : NetworkBehaviour
     [ServerCallback]
     private void ServerUpdate()
     {
+        if (currentState == AIState.Dead) return; // Dead 상태에서는 동작 중지
+
         stateChangeTimer -= Time.deltaTime;
         positionChangeTimer -= Time.deltaTime;
 
@@ -78,14 +80,19 @@ public class AIController : NetworkBehaviour
                 SetNewDestination();
             }
         }
-
         // 상태에 따른 행동 처리
         HandleMovement();
+
+        agent.destination = syncDestination;
+        agent.speed = syncSpeed;
+        animator.SetFloat("Speed", agent.velocity.magnitude);
     }
 
     [ClientCallback]
     private void ClientUpdate()
     {
+        if (currentState == AIState.Dead) return; // Dead 상태에서는 동작 중지
+
         agent.destination = syncDestination;
         agent.speed = syncSpeed;
         animator.SetFloat("Speed", agent.velocity.magnitude);
@@ -102,15 +109,21 @@ public class AIController : NetworkBehaviour
                 break;
             case AIState.Walking:
                 agent.isStopped = false;
-                syncSpeed = 1.5f;
+                syncSpeed = 1.2f;
                 agent.speed = syncSpeed;
                 animator.SetFloat("Speed", agent.velocity.magnitude);
                 break;
             case AIState.Running:
                 agent.isStopped = false;
-                syncSpeed = 3f;
+                syncSpeed = 2f;
                 agent.speed = syncSpeed;
                 animator.SetFloat("Speed", agent.velocity.magnitude);
+                break;
+            case AIState.Dead:
+                agent.isStopped = true;
+                syncSpeed = 0f;
+                agent.velocity = Vector3.zero;
+                animator.SetFloat("Speed", 0);
                 break;
         }
     }
@@ -162,8 +175,17 @@ public class AIController : NetworkBehaviour
         animator = GetComponent<Animator>();
     }
 
-
+    [Server]
     public void Die()
+    {
+        if (currentState == AIState.Dead) return; // 이미 죽은 상태이면 실행하지 않음
+
+        currentState = AIState.Dead; // 상태를 Dead로 설정
+        RpcDie(); // 모든 클라이언트에 사망을 알림
+    }
+
+    [ClientRpc]
+    public void RpcDie()
     {
         animator.SetTrigger("Die");
         agent.isStopped = true;
@@ -171,7 +193,7 @@ public class AIController : NetworkBehaviour
         GetComponent<Collider>().enabled = false;
 
         StartCoroutine(DisableAfterDelay(2f));
-     }
+    }
 
     private IEnumerator DisableAfterDelay(float delay)
     {

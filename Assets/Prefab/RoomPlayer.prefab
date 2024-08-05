@@ -111,6 +111,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 795c71bf3bfe0184f8edc104be016f54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
 --- !u!1 &1832541006920118774
 GameObject:
   m_ObjectHideFlags: 0
@@ -2089,6 +2092,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
+  isAlive: 1
   NavAgent_Player: {fileID: 6819928917654252292}
   Transform_Player: {fileID: 6819928917661762809}
   weapon: {fileID: 1543925764547012068}
@@ -2676,6 +2680,7 @@ GameObject:
   - component: {fileID: 7555020653161112891}
   - component: {fileID: 7555020653161112868}
   - component: {fileID: 7555020653161112869}
+  - component: {fileID: 1045838105810739521}
   m_Layer: 5
   m_Name: NickNameCanvas
   m_TagString: Untagged
@@ -2766,6 +2771,18 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &1045838105810739521
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7555020653161112871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b796ec378513954a81734c688557f13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7669876791853116941
 GameObject:
   m_ObjectHideFlags: 0

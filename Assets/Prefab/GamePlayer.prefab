@@ -176,6 +176,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 920d1577966a61e42913d1d002b16afa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
 --- !u!1 &6048319789278978254
 GameObject:
   m_ObjectHideFlags: 0
@@ -2006,6 +2009,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
+  isAlive: 1
   NavAgent_Player: {fileID: 6819928917654252292}
   Transform_Player: {fileID: 6819928917661762809}
   weapon: {fileID: 8790331962162290667}
@@ -2678,8 +2682,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 0
   serializedVersion: 2
-  m_Size: {x: 0.0005095707, y: 0.0014935697, z: 0.007186034}
-  m_Center: {x: 8.791602e-10, y: 8.5905527e-10, z: 0.0024248906}
+  m_Size: {x: 0.0036124613, y: 0.002642896, z: 0.009882945}
+  m_Center: {x: 0.00007324414, y: -0.0005746667, z: 0.0037733344}
 --- !u!114 &1586209907068480258
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2692,3 +2696,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 795c71bf3bfe0184f8edc104be016f54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
