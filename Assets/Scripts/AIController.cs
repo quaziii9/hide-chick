@@ -12,7 +12,7 @@ public class AIController : NetworkBehaviour
     private AIState currentState;
 
     [SyncVar]
-    private Vector3 syncDestination;
+    [SerializeField]private Vector3 syncDestination;
 
     [SyncVar]
     private float syncSpeed;

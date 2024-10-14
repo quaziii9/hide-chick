@@ -13,7 +13,7 @@ public class Database : Singleton<Database>
     [SerializeField] TextMeshProUGUI Text_Log;
 
     [Header("ConnectionInfo")]
-    [SerializeField] string _ip = "3.38.210.157";
+    [SerializeField] string _ip;
     [SerializeField] string _dbName = "login";
     [SerializeField] string _uid = "root";
     [SerializeField] string _pwd = "1234";
@@ -152,7 +152,6 @@ public class Database : Singleton<Database>
     {
         Text_Log.text = string.Empty;
 
-        Debug.Log("?");
         string RegisterQuery = $"INSERT INTO login (NickName, Password) VALUES('{Input_Id.text}', '{Input_Password.text}');";
 
         bool isSuccess = OnInsertOnUpdateRequest(RegisterQuery);
